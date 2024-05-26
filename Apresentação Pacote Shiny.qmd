@@ -1,0 +1,196 @@
+---
+title: "Apresentação Pacote Shiny"
+author: "André, Bruno, Caio, Gabriel e João Gabriel"
+format:
+  revealjs:
+    logo: "https://s1.static.brasilescola.uol.com.br/be/vestibular/-5a33acc1ad718.jpg"
+    embed-resources: true
+    smooth-scroll: true
+    scrollable: true
+server: shiny
+editor: visual
+engine: knitr
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  error = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+## Importando pacotes que serão utilizados para elaboração dos códigos
+
+```{r echo = TRUE, warning = FALSE, cache = TRUE}
+if(!require("pacman")) install.packages("pacman")
+pacman::p_load("shiny",
+               "tidyverse",
+               "babynames",
+               "DT",
+               "shinythemes",
+               "gapminder")
+```
+
+
+## Programação da Apresentação
+
+  Introdução
+
+  Estrutura Básica e Geral de um App Shiny
+
+ Tipos de Inputs e Outputs
+
+ Interação entre o UI e o Server
+
+ Tipos de Layout e Temas
+
+ Programação Reativa
+ 
+ Usando outros Pacotes Interativos no Shiny
+ 
+
+## Introdução
+
+Em sua estrutura mínima, um App Shiny requer:
+> objeto UI (interface do usuário), por
+onde o usuário conseguirá interagir com a aplicação;
+> Um objeto server, (servidor) que irá
+receber os inputs (valores de entrada) fornecidos pelo usuário, convertendo-os em seu(s) respectivo(s)
+output(s);
+>  Chamada da função shinyApp(ui = ui, server = server), que irá iniciar a execução do
+aplicativo, a partir dos objetos UI e server informados.
+
+```{r echo=TRUE, eval = FALSE}
+
+ui <- fluidPage(
+  
+)
+
+server <- function(input, output, session) {
+  
+}
+
+shinyApp(ui = ui, server = ui)
+
+```
+
+## Introdução
+
+
+
+ 
+## Estrutura Básica e Geral de um App Shiny
+
+```{r}
+textInput("name", "Insira um nome:")
+textOutput("q")
+```
+
+
+```{r}
+#| context: server
+
+output$q <- renderText({
+    paste("Você prefere cães ou gatos,",
+          input$name, "?")
+})
+```
+
+```{r echo = TRUE, eval = FALSE}
+
+library(shiny)
+
+ui <- fluidPage( 
+  textInput("nome", "Informe um nome:"),
+  textOutput("q")
+)  # ui = interface do usuário
+
+server <- function(input, output){
+  output$q <- renderText({
+    paste("Você prefere cães ou gatos,",
+          input$nome, "?")
+  })
+}
+
+shinyApp(ui = ui, server = server)
+
+```
+
+## Tipos de Input e Output
+
+### Estrutura Comum
+
+Há inúmeros tipos de input e output disponíveis no Shiny. De todo modo, para que
+eles possam ser devidamente reconhecidos e processados pelo App Shiny, eles necessitam
+de um "id identificador", que nada mais é uma string simples e única (inputId). Por essa razão,
+cada uma dessas strings deve ser usada para identificar apenas UM input.
+
+Exemplo:
+
+```{r echo = TRUE, eval = FALSE}
+
+selectInput(inputId = "input1",   # String identificadora do Input
+            "label",
+            choices = c("A", "B", "C"))
+
+sliderInput(inputId = "input2", # String identificadora do Input
+            "label",
+            value = 1925,
+            min = 1900,
+            max = 2000)
+
+
+```
+
+## Tipos de Input
+
+### selectInput()
+
+```{r echo=TRUE, eval=FALSE}
+
+selectInput(inputId,
+            label,
+            choices,
+            selected = NULL,
+            multiple = FALSE,
+            ...)
+
+
+```
+
+
+```{r}
+selectInput("variable",
+            "Variable:",
+              c("Cylinders" = "cyl",
+                "Transmission" = "am",
+                "Gears" = "gear"))
+  tableOutput("data")
+```
+
+```{r}
+#| context: server
+
+output$data <- renderTable({
+    mtcars[, c("mpg", input$variable), drop = FALSE]
+  }, rownames = TRUE)
+```
+
+## Tipos de Input
+
+### checkoxInput()
+
+```{r echo=TRUE, eval=FALSE}
+
+checkboxInput(inputId,
+              label,
+              choices,
+              selected = NULL,
+              ...)
+
+```
+
+
+
