@@ -1,5 +1,5 @@
 ---
-title: "Apresentação Pacote Shiny"
+title: "Pacote Shiny"
 author: "André, Bruno, Caio, Gabriel e João Gabriel"
 format:
   revealjs:
@@ -7,6 +7,7 @@ format:
     embed-resources: true
     smooth-scroll: true
     scrollable: true
+    theme: moon
 server: shiny
 editor: visual
 engine: knitr
@@ -33,36 +34,31 @@ pacman::p_load("shiny",
                "gapminder")
 ```
 
-
-## Programação da Apresentação
+# Sumário
 
 1.Introdução
 
 2.Estrutura Básica e Geral de um App Shiny
 
 3.Tipos de Inputs e Outputs
- 
+
 4.Tipos de Layout e Temas
- 
+
 5.Server
 
 6.Interação entre o UI e o Server
 
 7.Programação Reativa
- 
+
 8.Usando outros Pacotes Interativos no Shiny
- 
 
 # Introdução
 
-## Introdução
+## Funcionalidade
 
-### Para quê serve?
+Shiny é um pacote do R (também disponível para o Python) que permite a criação e publicação de aplicações web sem necessidade de conhecimento prévio em HTML, CSS e JavaScript;
 
-Shiny é um pacote do R (também disponível para o Python) que permite a criação e publicação de aplicações web
-sem necessidade de conhecimento prévio em HTML, CSS e JavaScript; apenas em R, de modo que o processo necessário
-para criação dessas aplicações seja bastante facilitado para usuários dessa linguagem.
-
+O processo necessário para criação dessas aplicações seja bastante facilitado para usuários do R.
 
 ```{r echo = FALSE}
 
@@ -70,20 +66,15 @@ para criação dessas aplicações seja bastante facilitado para usuários dessa
 
 ```
 
-## Introdução
+## Estrutura Básica de um App Shiny
 
-### Estrutura Básica de um App Shiny
+Em essência, um App Shiny é gerado a partir de dois objetos e a chamada de uma função:
 
-Em essência, um App Shiny é gerado a partir de dois objetos e a chamada de uma função:  
+-   UI (Interface do Usuário)
 
-* UI (Interface do Usuário)  
+-   Server
 
-* Server   
-
-* Função shinyApp(ui, server)
-
-Assim sendo, o código mínimo necessário para produzir
-um App Shiny é:
+-   Função shinyApp(ui, server)
 
 ```{r echo=TRUE, eval = FALSE}
 
@@ -101,18 +92,13 @@ shinyApp(ui = ui, server = ui)
 
 ```
 
-
 # UI - Interface do Usuário
 
 ## UI: Definição
 
-O objeto UI é geralmente inicializado pela função fluidPage(), que gerá uma página HTML vazia (também podem ser usadas
-outras funções para inicializar o UI). Dentro desta função, 
-são definidos os tipos de inputs (valores de entrada) e output(valores de saída)
-que o App Shiny apresentará, assim como também a formatação, layout; isto é, a aparência que o App
-terá para o usuário.
+O objeto UI é geralmente inicializado pela função fluidPage(), que gerá uma página HTML vazia (também podem ser usadas outras funções para inicializar o UI);
 
-Exemplo:
+São definidos os tipos de inputs (valores de entrada) e outputs (valores de saída) que o App Shiny apresentará, assim como também a formatação, layout.
 
 ```{r echo=TRUE, eval=FALSE}
 
@@ -128,22 +114,15 @@ ui <- fluidPage(
 
 ```
 
-
-
 ## Tipos de Input
 
 ### Estrutura Comum
 
-Há inúmeros tipos de input disponíveis no Shiny. De todo modo, para que
-eles possam ser devidamente reconhecidos e processados pelo App Shiny, todos ele precisam de dois parâmetros em comum:
+Há inúmeros tipos de input disponíveis no Shiny, de todo modo, para que sejam reconhecidos e processados, todos ele precisam de dois parâmetros em comum:
 
-* Parâmetro "**inputId**": Trata-se de uma string simples e única que será armazenada
- dentro da lista "input" que é parâmetro da função **server(input, output)**. Desse modo, deve-se utilizar id´s diferentes para referenciar diferentes inputs;  
- 
-* Parâmetro "**label**": Trata-se do rótulo/mensagem/instrução que irá aparecer no App Shiny, orientando
-o usuário sobre como ele deve interagir com as opções de input dadas.
+-   Parâmetro "**inputId**": Trata-se de uma string simples e única que será armazenada dentro da lista "input" que é parâmetro da função **server(input, output)**. Desse modo, deve-se utilizar id´s diferentes para referenciar diferentes inputs;
 
-Exemplo:
+-   Parâmetro "**label**": Trata-se do rótulo/mensagem/instrução que irá aparecer no App Shiny, orientando o usuário sobre como ele deve interagir com as opções de input dadas.
 
 ```{r echo = TRUE, eval = FALSE}
 
@@ -164,8 +143,7 @@ sliderInput(inputId = "input2", # String identificadora do Input
 
 ### selectInput()
 
-Dada uma listagem de opções fornecidas, é solicitado ao usuário selecionar uma ou algumas
-das opções dadas.
+Dada uma listagem de opções fornecidas, é solicitado ao usuário selecionar uma ou algumas das opções dadas.
 
 ```{r echo=TRUE, eval=FALSE}
 
@@ -181,8 +159,7 @@ selectInput(inputId = 'input1',
 
 ### checkboxGroupInput()
 
-Semelhante à função selectInput(), mas com uma aparência levemente diferente, e permite selecionar,
-por padrão, múltiplas opções.
+Semelhante à função selectInput(), mas com uma aparência levemente diferente, e permite selecionar, por padrão, múltiplas opções.
 
 ```{r echo=TRUE, eval=FALSE}
 
@@ -214,9 +191,7 @@ actionButton(inputId = 'input1',
 
 ### sliderInput()
 
-A partir de uma barra de rolagem (horizontal), o usuário é informado para selecionar um número
-dentro de um intervalo de valores estabelecido
-
+A partir de uma barra de rolagem (horizontal), o usuário é informado para selecionar um número dentro de um intervalo de valores estabelecido
 
 ```{r echo=TRUE, eval=FALSE}
 
@@ -250,7 +225,7 @@ textInput(inputId,
 
 ### passwordInput()
 
-Semelhante a função tenxtInput(), com a diferença que o input informado aparecerá com tarjas ("*")
+Semelhante a função tenxtInput(), com a diferença que o input informado aparecerá com tarjas ("\*")
 
 ```{r echo=TRUE, eval=FALSE}
 
@@ -261,7 +236,6 @@ passwordInput(input,
               placeholder = NULL)
 
 ```
-
 
 ## Tipos de Input
 
@@ -319,10 +293,9 @@ fileInput(inputId,
 
 ### Tipos de Output
 
-Os tipos de output são definidos ainda no primeiro objeto, o UI (interface de usuário).
-Tal como no caso de funções de input, um parâmetro também necessário para identificação
-dos outputs, que serão armazenados dentro do parâmetro "output" da função server (2º objeto fundamental
-de um App Shiny) é uma string simples e única chamada arbitrariamente de "outputId". Alguns tipos de output são:
+-   Os tipos de *output* são definidos no primeiro objeto, a UI (interface de usuário).
+
+-   Assim como os *inputs*, no *output* também exigem uma identificação - 'outputId'.
 
 ```{r echo=TRUE, eval=FALSE}
 
@@ -341,28 +314,46 @@ textOutput(outputId = 'texto') # Define um texto como output
 
 ```
 
-
 ## Tipos de Output
 
-Feito isso, para que o(s) output(s) definido(s) seja(m) devidamente executado(s) e
-processado(s) pelo R, faz-se necessário também o uso das render functions (funções de
-renderização); por exemplo, renderText({}). Estas são definidas no objeto Server
+-   Feito isso, para que o(s) *output(s)* definido(s) seja(m) devidamente executado(s) e processado(s) pelo R, faz-se necessário também o uso das *render functions* (funções de renderização); por exemplo, "renderText({})";
+
+-   Estas são definidas no objeto Server.
+
+```{r echo = TRUE, results='hide'}
+ui3 <- fluidPage( 
+  textInput("name", "Enter a name:"),
+  textOutput("greeting")
+)
+
+server3 <- function(input, output, session){
+  output$greeting <- renderText({
+    paste("Do you prefer dogs or cats,", input$name, "?")
+  })
+}
+  
+shinyApp(ui = ui3, server = server3)
+```
 
 # Server
 
-## Estrutura Básica 
+## Estrutura Básica
 
-server <- function(input, output) {
+```{r}
+server <- function(input, output, session) {
 
 }
+```
 
-## Outputs
+## Render Functions
 
 ### Render Functions
 
-As render functions (funções de renderização) são os objetos que irão efetivamente
-explicitar os outputs previamente definidos no UI (primeiro objeto fundamental de um App Shiny).
-Um exemplo geral para o uso de uma render function segue abaixo:
+As *render function*s (funções de renderização) são os objetos que irão efetivamente explicitar os outputs previamente definidos no UI.;
+
+Possibilita a utilização de pacotes fora do pacote Shiny, mas que possuem suporte para renderizar seus resultados, como:
+
+-   *DT*, *PLotly* e *Leaflet*
 
 ```{r echo=TRUE, eval=FALSE}
 
@@ -380,14 +371,44 @@ server <- function(input, object) {
 
 ## Tipos de Render Functions
 
-### RenderPlot
+### renderPlot()
+
+```{r, echo=TRUE, results='hide'}
+
+server <- function(input, output, session){
+  output$hist_waiting <- renderPlot({
+    hist(faithful$waiting,
+         breaks = input$nb_bins,
+         col = 'steelblue')
+  })
+}
+
+```
+
+### renderPlot() + pacote *plotly*
 
 ```{r}
+server <- function(input, output, session){
+  # Function to plot trends in a name
+  plot_trends <- function(){
+    babynames %>% 
+      filter(name == input$name) %>% 
+      plotly::plot_ly(, x = ~year, y = ~n, type = "bar")
+  }
+  output$plot_trendy_names <- plotly::renderPlotly(plot_trends())
+}
+```
 
-renderPlot({ # Gerá um gráfico
-  
-})  
+### renderTable() + pacote *DT*
 
+```{r echo=TRUE, results='hide'}
+server <- function(input, output){
+  output$babynames_table <- DT::renderDT({
+    babynames %>% 
+      dplyr::slice_sample(prop = .1) %>% 
+      DT::datatable()
+  })
+}
 ```
 
 
