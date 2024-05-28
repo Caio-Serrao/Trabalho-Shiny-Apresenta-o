@@ -39,11 +39,10 @@ pacman::p_load("shiny",
 1.  Introdução
 2.  Estrutura Básica e Geral de um App Shiny
 3.  Tipos de Inputs e Outputs
-4.  Tipos de Layout e Temas
-5.  Server
-6.  Interação entre o UI e o Server
-7.  Programação Reativa
-8.  Usando outros Pacotes Interativos no Shiny
+4.  Programação Reativa
+5.  Tipos de Layout e Temas
+7.  Dashboards no Shiny
+
 
 # Introdução
 
@@ -51,7 +50,7 @@ pacman::p_load("shiny",
 
 Shiny é um pacote do R (também disponível para o Python) que permite a criação e publicação de aplicações web sem necessidade de conhecimento prévio em HTML, CSS e JavaScript;
 
-O processo necessário para criação dessas aplicações seja bastante facilitado para usuários do R.
+Ou seja, a proposta é facilitar a criação de apps web somente com conhecimento em R.
 
 ```{r echo = FALSE}
 
@@ -111,7 +110,7 @@ ui <- fluidPage(
 
 ### Estrutura Comum
 
-Há inúmeros tipos de input disponíveis no Shiny, de todo modo, para que sejam reconhecidos e processados, todos ele precisam de dois parâmetros em comum:
+Há inúmeros tipos de input disponíveis no Shiny.De todo modo, para que sejam reconhecidos e processados, todos ele precisam de dois parâmetros em comum:
 
 -   Parâmetro "**inputId**": Trata-se de uma string simples e única que será armazenada dentro da lista "input" que é parâmetro da função **server(input, output)**. Desse modo, deve-se utilizar id´s diferentes para referenciar diferentes inputs;
 
@@ -288,7 +287,8 @@ fileInput(inputId,
 
 -   Os tipos de *output* são definidos no primeiro objeto, a UI (interface de usuário).
 
--   Assim como os *inputs*, no *output* também exigem uma identificação - 'outputId'.
+-   Assim como os *inputs*, no *output* também exigem uma identificação:
+    + Parâmetro 'outputId'.
 
 ```{r echo=TRUE, eval=FALSE}
 
@@ -311,7 +311,7 @@ textOutput(outputId = 'texto') # Define um texto como output
 
 -   Feito isso, para que o(s) *output(s)* definido(s) seja(m) devidamente executado(s) e processado(s) pelo R, faz-se necessário também o uso das *render functions* (funções de renderização); por exemplo, "renderText({})";
 
--   Estas são definidas no objeto Server.
+-   Estas são definidas no objeto Server (falaremos sobre logo a seguir).
 
 ```{r echo = TRUE, results='hide'}
 ui3 <- fluidPage( 
@@ -330,30 +330,45 @@ shinyApp(ui = ui3, server = server3)
 
 # Server
 
-## Estrutura Básica
+## Server
+
+- É nesse objeto que ocorre efetivamente a interação entre os inputs e outputs
+definidos no UI. Acessamos cada um dos inputs e outputs definidos usando o operador
+"\$" em conjuto com os parâmetros input e/ou ouput do objeto server, ou seja:  
+  + input\$input_id e output\$output_id;
+
+### Estrutura Básica do Server
+
 
 ```{r echo=T, eval=F}
 server <- function(input, output, session) {
+  
+  output$output_id
+  
+  input$input_id
+  
 
 }
 ```
 
-## Render Functions
+- "_Mas como exatamente cada elemento do parâmetro output pode interagir com um input_?"
+
+## Server
 
 ### Render Functions
 
-As *render function*s (funções de renderização) são os objetos que irão efetivamente explicitar os outputs previamente definidos no UI.;
+- Para que a interação entre input e output efetivamente ocorra, deve-se utilizar o que chamamos de
+"render functions", que possuem variados tipos, e são escolhidas com base nos tipos 
+de output que foram definidos no UI (tabela, gráfico, dataframe...).  
 
-Possibilita a utilização de pacotes fora do pacote Shiny, mas que possuem suporte para renderizar seus resultados, como:
-
--   *DT*, *PLotly* e *Leaflet*
+As *render function*s (funções de renderização) são os objetos que irão efetivamente explicitar os outputs previamente definidos no UI;
 
 ```{r echo=TRUE, eval=FALSE}
 
 server <- function(input, object) {
   output$output_id <- render**function**({
     
-    blackbox( input$input_id ) ## Dentro da render function, algum input armazenado dentro do parâmetro
+    "blackbox"(input$input_id) ## Dentro da render function, algum input armazenado dentro do parâmetro
                               # input como "input_id" recebe algum tipo de transformação de maneira a gerar
                               # um output
     })
@@ -362,9 +377,36 @@ server <- function(input, object) {
 
 ```
 
-## Exemplos de Render Functions
+## Server
 
-### renderPlot()
+### Render Functions
+
+Alguns exemplos:
+
+```{r echo=TRUE, eval=FALSE}
+
+renderText({
+  
+})
+
+renderPlot({
+  
+})
+
+renderTable({
+  
+})
+
+```
+
+Elas possibilitam também a utilização de pacotes fora do pacote Shiny, mas que possuem suporte para renderizar seus resultados, como:
+
+-   *DT*, *PLotly* e *Leaflet*
+
+
+### Exemplos de Render Functions
+
+#### renderPlot()
 
 ```{r, echo=TRUE, eval=F}
 
@@ -384,7 +426,7 @@ server <- function(input, output, session){
 
 ```{r echo=TRUE, eval=F}
 server <- function(input, output, session){
-  # Function to plot trends in a name
+  # Função para plotar tendências de um nome
   plot_trends <- function(){
     babynames %>% 
       filter(name == input$name) %>% 
