@@ -1056,7 +1056,7 @@ server <- function(input, output){
   
 ```
 
-## Dashboard
+## Shiny Dashboard
 
 -   Agora modificaremos a parte do corpo/body do dashboard
 
@@ -1080,7 +1080,7 @@ server <- function(input, output){
 shinyApp(ui, server)
 ```
 
-## Dashboard
+## Shiny Dashboard
 
 -   Podemos também adicionar conteúdo em cada caixa
 
@@ -1105,7 +1105,7 @@ shinyApp(ui, server)
   
 ```
 
-## Dashboard
+## Shiny Dashboard
 
 -   Modificando a largura de cada caixa no dashboard
 
@@ -1129,7 +1129,7 @@ shinyApp(ui, server)
   
 ```
 
-## Dashboard
+## Shiny Dashboard
 
 -   Tipos específicos de caixas: valueBox
 
@@ -1150,7 +1150,7 @@ shinyApp(ui, server)
   
 ```
 
-## Dashboard
+## Shiny Dashboard
 
 -   Tipos específicos de caixas: infoBox
 
@@ -1172,7 +1172,7 @@ shinyApp(ui, server)
   
 ```
 
-## Dashboard
+## Shiny Dashboard
 
 -   Colocando abas na sidebar
 
@@ -1197,7 +1197,7 @@ shinyApp(ui, server)
   
 ```
 
-## Dashboard
+## Shiny Dashboard
 
 -   Colocando abas no body
 
