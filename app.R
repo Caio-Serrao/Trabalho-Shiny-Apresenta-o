@@ -32,7 +32,7 @@ if (interactive()) {
 
 ## checkBoxInput() widget
 
-if (interactive()) {
+if (interactive()){
   
   ui <- fluidPage(
     checkboxGroupInput("variable", "Variáveis para mostrar:",
