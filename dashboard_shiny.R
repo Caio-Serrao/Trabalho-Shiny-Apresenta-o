@@ -112,5 +112,54 @@ server <- function(input, output) {
 
 shinyApp(ui, server)
 
+##### parte 07 ######
 
+# Modificando parametros no body - criando linhas e caixas
+
+header <- dashboardHeader(title = "My first dashboard")
+
+sidebar <- dashboardSidebar()
+
+body <- dashboardBody(
+  fluidRow(
+    box("row 1, box 1"),
+    box("row 1, box 2")
+  ),
+  fluidRow(
+    box("row 2, box 1")
+  )
+)
+
+ui <- dashboardPage(header, sidebar, body)
+
+server <- function(input, output){
+  
+}
+
+shinyApp(ui, server)
+
+##### parte 08 ######
+
+# Adicionando conteúdo às caixas
+
+body <- dashboardBody(
+  fluidRow(
+    box("row 1, box 1",
+        plotOutput("plot")),
+    box("row 1, box 2")
+  ),
+  fluidRow(
+    box("row 2, box 1",
+        selectInput("select", "select a number:",
+                    choices = c(1, 2, 3, 4, 5)))
+  )
+)
+
+ui <- dashboardPage(header, sidebar, body)
+
+server <- function(input, output){
+  
+}
+
+shinyApp(ui, server)
 
