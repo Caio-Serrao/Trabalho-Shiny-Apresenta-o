@@ -32,7 +32,7 @@ pacman::p_load("shiny",
                "DT",
                "shinythemes",
                "gapminder",
-               "shinydasboard")
+               "shinydashboard")
 ```
 
 # Sumário
@@ -42,9 +42,9 @@ pacman::p_load("shiny",
 3.  Tipos de Inputs e Outputs
 4.  Tipos de Layout e Temas
 5.  Programação Reativa
-7.  Dashboards no Shiny
- 
- Programação Reativa
+6.  Dashboards no Shiny
+
+Programação Reativa
 
 # Introdução
 
@@ -272,7 +272,8 @@ fileInput(inputId,label,
 -   Os tipos de *output* são definidos no primeiro objeto, a UI (interface de usuário).
 
 -   Assim como os *inputs*, no *output* também exigem uma identificação:
-    + Parâmetro 'outputId'.
+
+    -   Parâmetro 'outputId'.
 
 ```{r echo=TRUE, eval=FALSE}
 
@@ -316,13 +317,10 @@ shinyApp(ui = ui3, server = server3)
 
 ## Server
 
-- É nesse objeto que ocorre efetivamente a interação entre os inputs e outputs
-definidos no UI. Acessamos cada um dos inputs e outputs definidos usando o operador
-"\$" em conjuto com os parâmetros input e/ou ouput do objeto server, ou seja:  
-  + input\$input_id e output\$output_id;
+-   É nesse objeto que ocorre efetivamente a interação entre os inputs e outputs definidos no UI. Acessamos cada um dos inputs e outputs definidos usando o operador "\$" em conjuto com os parâmetros input e/ou ouput do objeto server, ou seja:
+    -   input\$input_id e output\$output_id;
 
 ### Estrutura Básica do Server
-
 
 ```{r echo=T, eval=F}
 server <- function(input, output, session) {
@@ -335,16 +333,13 @@ server <- function(input, output, session) {
 }
 ```
 
-- "_Mas como exatamente cada elemento do parâmetro output pode interagir com um input_?"
+-   "*Mas como exatamente cada elemento do parâmetro output pode interagir com um input*?"
 
 ## Server
 
 ### Render Functions
 
-- Para que a interação entre input e output efetivamente ocorra, deve-se utilizar o que chamamos de
-"render functions", que possuem variados tipos, e são escolhidas com base nos tipos 
-de output que foram definidos no UI (tabela, gráfico, dataframe...). Ou seja,
-as render functions são o objeto intermediário entre inputs e outputs.
+-   Para que a interação entre input e output efetivamente ocorra, deve-se utilizar o que chamamos de "render functions", que possuem variados tipos, e são escolhidas com base nos tipos de output que foram definidos no UI (tabela, gráfico, dataframe...). Ou seja, as render functions são o objeto intermediário entre inputs e outputs.
 
 As *render function*s (funções de renderização) são os objetos que irão efetivamente explicitar os outputs previamente definidos no UI;
 
@@ -368,17 +363,14 @@ server <- function(input, object) {
 
 Alguns exemplos:
 
+| Output      | Render Function |
+|-------------|-----------------|
+| textOutput  | renderText({})  |
+| plotOutput  | renderPlot({})  |
+| tableOutput | renderTable({}) |
+| imageOutput | renderImage({}) |
 
-Output | Render Function
-------------- | -------------
-textOutput  | renderText({})
-plotOutput  | renderPlot({})
-tableOutput | renderTable({})
-imageOutput | renderImage({})
-
-Elas possibilitam também a utilização de outros pacotes interativos possuem suporte para renderizar
-seus outputs no Shiny. Entre eles *DT*, *Plotly* e *Leaflet*
-
+Elas possibilitam também a utilização de outros pacotes interativos possuem suporte para renderizar seus outputs no Shiny. Entre eles *DT*, *Plotly* e *Leaflet*
 
 ### Exemplos de Render Functions
 
@@ -918,8 +910,6 @@ Já a função `validate()` permite customizar o erro retornado.
 fonte: https://programando-em-shiny.curso-r.com
 :::
 
-
-
 # Dashboard no Shiny
 
 ## Shiny Dashboard
@@ -1066,3 +1056,168 @@ server <- function(input, output){
   
 ```
 
+## Dashboard
+
+-   Agora modificaremos a parte do corpo/body do dashboard
+
+```{r echo = TRUE, eval = FALSE}
+  
+# Modificando parametros no body - criando linhas e caixas
+
+header <- dashboardHeader(title = "My first dashboard")
+sidebar <- dashboardSidebar()
+body <- dashboardBody(
+  fluidRow(
+    box("row 1, box 1"),
+    box("row 1, box 2")
+  ),
+  fluidRow(
+    box("row 2, box 1")))
+ui <- dashboardPage(header, sidebar, body)
+server <- function(input, output){
+}
+
+shinyApp(ui, server)
+```
+
+## Dashboard
+
+-   Podemos também adicionar conteúdo em cada caixa
+
+```{r echo = TRUE, eval = FALSE}
+  
+# Adicionando conteúdo às caixas
+
+body <- dashboardBody(
+  fluidRow(
+    box("row 1, box 1",
+        plotOutput("plot")),
+    box("row 1, box 2")
+  ),
+  fluidRow(
+    box("row 2, box 1",
+        selectInput("select", "select a number:",
+                    choices = c(1, 2, 3, 4, 5)))))
+ui <- dashboardPage(header, sidebar, body)
+server <- function(input, output){
+  }
+shinyApp(ui, server)
+  
+```
+
+## Dashboard
+
+-   Modificando a largura de cada caixa no dashboard
+
+```{r echo = TRUE, eval = FALSE}
+  
+# Alterando a largura das caixas
+body <- dashboardBody(
+  fluidRow(
+    box("row 1, box 1",
+        plotOutput("plot")),
+    box("row 1, box 2", width = 4)),
+  fluidRow(
+    box("row 2, box 1",
+        selectInput("select", "select a number:",
+                    choices = c(1, 2, 3, 4, 5)),
+        width = 12)))
+ui <- dashboardPage(header, sidebar, body)
+server <- function(input, output){
+  }
+shinyApp(ui, server)
+  
+```
+
+## Dashboard
+
+-   Tipos específicos de caixas: valueBox
+
+```{r echo = TRUE, eval = FALSE}
+  
+# Adicionando tipos especificos de caixas: valueBox
+
+body <- dashboardBody(
+  fluidRow(
+    valueBox(value = 3,
+             subtitle = "Total of cars",
+             icon = icon("car"),
+             color = "red")))
+ui <- dashboardPage(header, sidebar, body)
+server <- function(input, output){
+  }
+shinyApp(ui, server)
+  
+```
+
+## Dashboard
+
+-   Tipos específicos de caixas: infoBox
+
+```{r echo = TRUE, eval = FALSE}
+  
+# Adicionando tipos especificos de caixas: infoBox
+
+body <- dashboardBody(
+  fluidRow(
+    infoBox(value = 3,
+            title = "Total of bicycles",
+            icon = icon("bicycle"),
+            color = "green",
+            width = 6)))
+ui <- dashboardPage(header, sidebar, body)
+server <- function(input, output){
+  }
+shinyApp(ui, server)
+  
+```
+
+## Dashboard
+
+-   Colocando abas na sidebar
+
+```{r echo = TRUE, eval = FALSE}
+  
+# Adicionando tabItems
+sidebar <- dashboardSidebar(width = 300,
+                            sidebarMenu(
+                              id = "pages",
+                              menuItem("Many charts", tabName = "charts",
+                                       icon = icon("chart-line")),
+                              menuItem("Statistics", tabName = "statistics",
+                                       icon = icon("file-excel"))))
+body <-dashboardBody(
+  tabItems(
+    tabItem("charts", "Charts go here."),
+    tabItem("statistics", "Statistics go here.")))
+ui <- dashboardPage(header, sidebar, body)
+server <- function(input, output) {
+}
+shinyApp(ui, server)
+  
+```
+
+## Dashboard
+
+-   Colocando abas no body
+
+```{r echo = TRUE, eval = FALSE}
+  
+# Adicionando tabPanels
+sidebar <- dashboardSidebar()
+body <-dashboardBody(
+  tabsetPanel(
+    tabPanel("Distribution",
+    box(plotOutput("dist"))),
+    tabPanel("Calendar",
+             dateInput("matchdate",
+                       "Enter the date:",
+                       value = "2024-05-28"))))
+ui <- dashboardPage(header, sidebar, body)
+server <- function(input, output) {
+}
+shinyApp(ui, server)
+  
+```
+
+# Montando um exemplo de Dashboard
