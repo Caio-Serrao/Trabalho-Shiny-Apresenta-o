@@ -534,7 +534,394 @@ Caso existam **mais de uma** saída e deseja-se criar abas para exibir os result
  )
 ```
 
-## Dashboard
+# Programação Reativa
+
+## O que é reatividade?
+
+Resumidamente, reatividade em programação é o conceito que torna possível a interação dinâmcica do usuário com o programa, no qual o que é efetivamente executado e exibido se baseia no acompanhamento das mudanças de determinados valores. Por exemplo, se um determinado input muda, um novo cálculo deve ser executado e um novo output gerado.
+
+## Programação Reativa
+
+### Como funciona a reatividade em apps Shiny?
+
+A reatividade se baseia em uma paradigma diferente de programção, chamado de declarativo. No Shiny, declaramos dentro da função `server()` quando e quais códigos devem ser executados a depender de cada nova situação. As relações de dependência entre input e output e os consequentes fluxos de execução nesses casos são definidadas e representadas através de um diagrama de reatividade.
+
+## Programação Reativa
+
+### Diagrama de Reatividade
+
+exemplo:
+
+```{r echo=TRUE, eval=FALSE}
+#| code-line-numbers: false
+# ui
+ui <- fluidPage(
+  selectInput(
+    inputId = "variavel_A",
+    label = "Variável A",
+    choices = names(mtcars)
+  ),
+  plotOutput(outputId = "histograma_A"),
+  selectInput(
+    inputId = "variavel_B",
+    label = "Variável B",
+    choices = names(mtcars)
+  ),
+  plotOutput(outputId = "histograma_B")
+)
+```
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Diagrama de Reatividade
+
+exemplo:
+
+```{r, echo=T, eval=F}
+#| code-line-numbers: false
+# server
+server <- function(input, output, session) {
+  output$histograma_A <- renderPlot({
+    print("Gerando histograma A...")
+    hist(mtcars[[input$variavel_A]], main = "Histograma A")
+  })
+  output$histograma_B <- renderPlot({
+    print("Gerando histograma B...")
+    hist(mtcars[[input$variavel_B]], main = "Histograma B")
+  })
+}
+
+# app
+shinyApp(ui, server)
+```
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Diagrama de Reatividade
+
+![diagrama de reatividade do exemplo](./figuras/diagrama_reatividade.jpg){fig-align="left" width="56%"}
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Valores Reativos e Funções Observadoras
+
+Para um app Shiny funcionar corretamente, é necessário que o diagrama de reatividade seja definido adequadamente na função `server()`. E para isso, alguns princípios devem ser observados. O primeiro deles é o seguinte: o diagrama de reatividade deve começar em um **valor reativo** e terminar em uma **função observadora**
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Valores Reativos e Funções Observadoras
+
+**valores reativos** são objetos que ativam a reatividade a partir das mudanças em seus valores. O principal exemplo de valor reativo são os próprios objetos do `input`.
+
+**funções observadoras** são funções que acompanham as mudanças no valores reativos e executam algo diferente a partir delas. O principal exemplo de função reativas são as funções da famílias `render*()`.
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Expressões Reativas
+
+**Expressões Reativas** são objetos especiais muito importantes que atuam como valor reativo e função observadora ao mesmo tempo. São utilizadas em situações onde um valor reativo utilizado dentro de uma função observadora depende outro valor reativo.
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Expressões Reativas
+
+Sua utilidade se torna mais claro quando levamos em consideração um segundo princípio importante da reatividade no shiny: **valores e expressões reativas só podem ser lidas dentro de um contexto reativo.**
+
+Ou seja, em um caso onde precisemos criar uma variável que dependa de um input, mas que sirva para ativar a reatividade em outputs diferentes, precisamos de uma expressão reativa, por exemplo.
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Expressões Reativas
+
+exemplo:
+
+Imagine uma aplicação Shiny que simule o lançar de um dado simples de 6 faces. Queremos que o usário insira o número de lançamentos (tamanho da amostra) desejado e que a partir desse número seja exibido um gráfico de barras com o quantidade de aparições de cada número (distribuição observada) e um frase informando qual valor mais apareceu.
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Expressões Reativas
+
+exemplo - primeira abordagem:
+
+```{r}
+#| code-line-numbers: false
+ui <- fluidPage(
+  "INCRÍVEL DADO",
+  sliderInput(
+    inputId = "tamanho",
+    label = "Selecione o número de lançamentos",
+    min = 1,
+    max = 1000,
+    value = 500
+  ),
+  plotOutput(outputId = "distribuicao"),
+  textOutput(outputId = "frase")
+)
+```
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Expressões Reativas
+
+exemplo - primeira abordagem:
+
+```{r}
+#| code-line-numbers: false
+server <- function(input, output, session) {
+  lancamentos <- sample(1:6, input$tamanho, replace = TRUE)
+
+  output$distribuicao <- renderPlot({
+    lancamentos |> 
+      table() |> 
+      barplot()
+  })
+  output$frase <- renderText({
+    contagem <- table(lancamentos)
+    mais_freq <- names(contagem[which.max(contagem)])
+    num_ap <- contagem[mais_freq]
+    paste("o valor mais sorteado foi o", mais_freq, "com ", num_ap, "aparições")
+  })
+}
+shinyApp(ui, server)
+```
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Expressões Reativas
+
+**Por que deu erro?**
+
+Justamente porque não seguimos o segundo princípio, e tentamos acessar o valor reativo `input$tamanho` dentro da variável comum `lancamentos`.
+
+**Qual é abordagem correta?**
+
+Podemos resolver criando o objeto `lancamentos` como uma expressão reativa através da função observadora `reactive()`.
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Expressões Reativas
+
+exemplo - abordagem adequada
+
+Dentro de `server()`, ao invés de:
+
+```{r eval=FALSE}
+#| code-line-numbers: false
+lancamentos <- sample(1:6, input$tamanho, replace = TRUE)
+```
+
+Fazemos:
+
+```{r eval=FALSE}
+#| code-line-numbers: false
+lancamentos <- reactive({
+    sample(1:6, input$tamanho, replace = TRUE)
+  })
+  
+## Observação: devemos utilizar () ao lado do nome (como uma função)
+## para acessar as expressões reativas criadas
+```
+
+## Programação Reativa
+
+### Funções Para Expressões Reativas
+
+#### `reactive()`
+
+A função `reactive()` cria uma expressão reativa que observa todos os valores reativos presentes dentro de seu código.
+
+No exemplo anterior, criamos a expressão reativa `lancamentos` cujo valor é recalculado sempre que o valor reativo `input$tamanho` mudar, e utilizamos seu valor chamando `lancamentos()` dentro das funções observadoras `renderPlot()` e `renderText()`.
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Funções Para Expressões Reativas
+
+#### `eventReactive()`
+
+A função `eventReactive()` é similar, mas observa mudanças em apenas um valor reativo, especificado na chamada da própria função.
+
+Geralmente é utilzada quando queremos atrasar (delay) a ativação da função observadora.
+
+Um caso comum de uso é quando temos um botão na UI, criado com a função `actionButton()`, por exemplo.
+
+## Programação Reativa
+
+### Funções Para Expressões Reativas
+
+#### `eventReactive()`
+
+Podemos utilizar essa ideia para incrementar o nosso exemplo anterior, de tal forma que os outputs só serão gerados caso o botão seja clicado, independente se os valores de `input$tamanho` mudarem.
+
+Adicionamos a função `actionButton()` da seguinte maneira:
+
+```{r eval=FALSE}
+#| code-line-numbers: false
+actionButton(inputId = "botao", label = "Simular")
+```
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Funções Para Expressões Reativas
+
+#### `eventReactive()`
+
+E atribuímos ao objeto `lancamentos` dentro do `server()` a função `eventReactive()` tendo `input$botao` como primeiro argumento:
+
+```{r eval=FALSE}
+#| code-line-numbers: false
+lancamentos <- eventReactive(input$botao, {
+    sample(1:6, input$tamanho, replace = TRUE)
+  })
+```
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Outras Funções Observadoras
+
+#### `observe()  E  observeEvent()`
+
+A funções `observe()` e `observetEvent()` tem o conceito semelhante a `reactive()` e `eventReactive()`, porém possuem uma diferença fundamental: elas não geram expressões reativas, sendo utilizadas apenas para rodar determinado código caso uma mudança em algum valor reativo aconteça. Ou seja, não podemos definir a expressão reativa `lancamentos` do exemplo anterior com elas.
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Outras Funções Observadoras
+
+#### `observe()  E  observeEvent()`
+
+Geralmente são utilizadas quando queremos usar a reatividade para disparar (trigger) ações que não estão ligadas à geração de outputs, como o registro de informações em bases de dados ou o envio de e-mails, por exemplo.
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Outras Funções Importantes
+
+#### `isolate()`
+
+Utilizada para isolar um valor reativo específico entre vários, de tal forma que se **apenas** ele for alterado nenhuma reatividade é disparada.
+
+::: footer
+fonte: https://shiny.posit.co/r/getstarted/build-an-app/reactivity-essentials/stop-trigger-delay.html
+:::
+
+## Programação Reativa
+
+### Outras Funções Importantes
+
+#### `reactiveVal()  E  reactiveValues()`
+
+Utilizada para gerar apenas um (`reactiveVal`) ou mais (`reactiveValues`) valores reativos mutáveis, diferentes do objetos do `input`, que são imutáveis.
+
+Pode ser usada em alguns casos quando queremos controlar valores reativos dentro do server(), e renderizar mudanças na UI a partir deles.
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Outras Funções Importantes
+
+#### `req()  E  validate()`
+
+Utilizada para validar valores reativos. Nesse contexto **inválido** indica um objeto:
+
+```         
+• FALSE
+• NULL
+• "", uma string vazia
+• Um vetor vazio
+• Um vetor que contenha apenas NA
+• Um vetor lógico que contenha apenas FALSE ou NA
+• Um objeto com classe try-error
+• Um valor reativo que represente um actionButton() que ainda não foi clicado
+```
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Outras Funções Importantes
+
+#### `req()  E  validate()`
+
+A função `req()` retorna um erro silencioso. Com o qual podemos definir que o `server()` e a `ui()` devem manter as coisas como estavam antes.
+
+Já a função `validate()` permite customizar o erro retornado.
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+
+
+# Dashboard no Shiny
+
+## Shiny Dashboard
 
 -   Uma das formas de se criar dashboards utilizando as funcionalidades do Shiny é utilizando o pacote [***shinydashboard***](https://rstudio.github.io/shinydashboard/)
 
@@ -556,7 +943,7 @@ server <- function(input, output){
   
 ```
 
-## Dashboard
+## Shiny Dashboard
 
 -   Mudando parâmetros no header
 
@@ -579,7 +966,7 @@ server <- function(input, output){
   
 ```
 
-## Dashboard
+## Shiny Dashboard
 
 -   Mudando parâmetros na sidebar
 
@@ -604,7 +991,7 @@ server <- function(input, output){
   
 ```
 
-## Dashboard
+## Shiny Dashboard
 
 -   É possível adicionar subtabs na sidebar
 
@@ -631,7 +1018,7 @@ server <- function(input, output){
   
 ```
 
-## Dashboard
+## Shiny Dashboard
 
 -   Assim como adicionar inputs
 
@@ -659,7 +1046,7 @@ server <- function(input, output){
   
 ```
 
-## Dashboard
+## Shiny Dashboard
 
 -   Por fim é possível desativar a sidebar
 
@@ -678,81 +1065,3 @@ server <- function(input, output){
   
 ```
 
-# Programação Reativa
-
-## O que é reatividade?
-
-Resumidamente, reatividade em programação é o conceito que torna possível a interação dinâmcica do usuário com o programa, no qual o que é efetivamente executado e exibido se baseia no acompanhamento das mudanças de determinados valores. Por exemplo, se um determinado input muda, um novo cálculo deve ser executado e um novo output gerado.
-
-## Programação Reativa
-
-### Como funciona a reatividade em apps Shiny?
-
-A reatividade se baseia em uma paradigma diferente de programção, chamado de declarativo. No Shiny, declaramos dentro da função `server()` quando e quais códigos devem ser executados a depender de cada nova situação. Podemos representar as relações de dependência entre input e output e os consequentes fluxos de execução nesses casos através de um diagrama de reatividade.
-
-## Programação Reativa
-
-### Diagrama de Reatividade
-
-exemplo:
-
-```{r echo=TRUE, eval=FALSE}
-# ui
-ui <- fluidPage(
-  selectInput(
-    inputId = "variavel_A",
-    label = "Variável A",
-    choices = variaveis
-  ),
-  plotOutput(outputId = "histograma_A"),
-  selectInput(
-    inputId = "variavel_B",
-    label = "Variável B",
-    choices = variaveis,
-    selected = variaveis[2],
-  ),
-  plotOutput(outputId = "histograma_B")
-)
-
-```
-
-::: footer
-**fonte: https://programando-em-shiny.curso-r.com**
-:::
-
-## Programação Reativa
-
-### Diagrama de Reatividade
-
-exemplo:
-
-```{r, echo=T, eval=F}
-# server
-server <- function(input, output, session) {
-  output$histograma_A <- renderPlot({
-    print("Gerando histograma A...")
-    hist(mtcars[[input$variavel_A]], main = "Histograma A")
-  })
-  output$histograma_B <- renderPlot({
-    print("Gerando histograma B...")
-    hist(mtcars[[input$variavel_B]], main = "Histograma B")
-  })
-}
-
-# app
-shinyApp(ui, server)
-```
-
-::: footer
-**fonte: https://programando-em-shiny.curso-r.com**
-:::
-
-## Programação Reativa
-
-### Diagrama de Reatividade
-
-![diagrama de reatividade do exemplo](./figuras/diagrama_reatividade.jpg){fig-align="left" width="56%"}
-
-::: footer
-**fonte: https://programando-em-shiny.curso-r.com**
-:::
