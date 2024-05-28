@@ -31,7 +31,8 @@ pacman::p_load("shiny",
                "babynames",
                "DT",
                "shinythemes",
-               "gapminder")
+               "gapminder",
+               "shinydasboard")
 ```
 
 # Sumário
@@ -292,7 +293,7 @@ fileInput(inputId,
 
 ```{r echo=TRUE, eval=FALSE}
 
-datatable(outputId = "dataframe")   # Define um dataframe como output
+dataTableOutput(outputId = "dataframe")   # Define um dataframe como output
 
 htmlOutput(outputId = "html") # Define um documento HTML como output
 
@@ -383,21 +384,13 @@ server <- function(input, object) {
 
 Alguns exemplos:
 
-```{r echo=TRUE, eval=FALSE}
 
-renderText({
-  
-})
-
-renderPlot({
-  
-})
-
-renderTable({
-  
-})
-
-```
+Output | Render Function
+------------- | -------------
+textOutput  | renderText({})
+plotOutput  | renderPlot({})
+tableOutput | renderTable({})
+imageOutput | renderImage({})
 
 Elas possibilitam também a utilização de pacotes fora do pacote Shiny, mas que possuem suporte para renderizar seus resultados, como:
 
