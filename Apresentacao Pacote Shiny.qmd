@@ -31,7 +31,8 @@ pacman::p_load("shiny",
                "babynames",
                "DT",
                "shinythemes",
-               "gapminder")
+               "gapminder",
+               "shinydashboard")
 ```
 
 # Sumário
