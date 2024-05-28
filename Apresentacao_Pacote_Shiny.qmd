@@ -40,10 +40,11 @@ pacman::p_load("shiny",
 1.  Introdução
 2.  Estrutura Básica e Geral de um App Shiny
 3.  Tipos de Inputs e Outputs
-4.  Programação Reativa
-5.  Tipos de Layout e Temas
+4.  Tipos de Layout e Temas
+5.  Programação Reativa
 7.  Dashboards no Shiny
-
+ 
+ Programação Reativa
 
 # Introdução
 
@@ -183,7 +184,7 @@ actionButton(inputId = 'input1',
 
 ### sliderInput()
 
-A partir de uma barra de rolagem (horizontal), o usuário é informado para selecionar um número dentro de um intervalo de valores estabelecido
+A partir de uma barra de rolagem (horizontal), o usuário é informado para selecionar um número dentro de um intervalo de valores estabelecido; ou então definir um intervalo de valores de interesse.
 
 ```{r echo=TRUE, eval=FALSE}
 
