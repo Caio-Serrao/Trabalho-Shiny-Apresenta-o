@@ -36,21 +36,14 @@ pacman::p_load("shiny",
 
 # Sumário
 
-1.Introdução
-
-2.Estrutura Básica e Geral de um App Shiny
-
-3.Tipos de Inputs e Outputs
-
-4.Tipos de Layout e Temas
-
-5.Server
-
-6.Interação entre o UI e o Server
-
-7.Programação Reativa
-
-8.Usando outros Pacotes Interativos no Shiny
+1.  Introdução
+2.  Estrutura Básica e Geral de um App Shiny
+3.  Tipos de Inputs e Outputs
+4.  Server
+5.  Tipos de Layout e Temas
+6.  Interação entre o UI e o Server
+7.  Programação Reativa
+8.  Usando outros Pacotes Interativos no Shiny
 
 # Introdução
 
@@ -321,6 +314,8 @@ textOutput(outputId = 'texto') # Define um texto como output
 -   Estas são definidas no objeto Server.
 
 ```{r echo = TRUE, results='hide'}
+library(shiny)
+
 ui3 <- fluidPage( 
   textInput("name", "Enter a name:"),
   textOutput("greeting")
@@ -339,9 +334,15 @@ shinyApp(ui = ui3, server = server3)
 
 ## Estrutura Básica
 
-```{r echo=T, eval=F}
-server <- function(input, output, session) {
+No servidor serão executadas todas as operações desejadas:
 
+-   gráficos, tabelas, mapas, entre diversas outras saídas;
+
+Aqui que os *labels* do UI receberam suas atribuições.
+
+```{r server, echo=T, eval=F}
+server <- function(input, output, session) {
+  
 }
 ```
 
@@ -355,7 +356,7 @@ Possibilita a utilização de pacotes fora do pacote Shiny, mas que possuem supo
 
 -   *DT*, *PLotly* e *Leaflet*
 
-```{r echo=TRUE, eval=FALSE}
+```{r render, echo=TRUE, eval=FALSE}
 
 server <- function(input, object) {
   output$output_id <- render**function**({
@@ -373,7 +374,7 @@ server <- function(input, object) {
 
 ### renderPlot()
 
-```{r, echo=TRUE, eval=F}
+```{r, renderplot, echo=TRUE, eval=F}
 
 server <- function(input, output, session){
   output$hist_waiting <- renderPlot({
@@ -389,7 +390,7 @@ server <- function(input, output, session){
 
 ### renderPlot() + pacote *plotly*
 
-```{r echo=TRUE, eval=F}
+```{r, renderplotly, echo=TRUE, eval=F}
 server <- function(input, output, session){
   # Function to plot trends in a name
   plot_trends <- function(){
@@ -405,7 +406,7 @@ server <- function(input, output, session){
 
 ### renderTable() + pacote *DT*
 
-```{r echo=TRUE, results='hide'}
+```{r renderDT, echo=TRUE, results='hide'}
 server <- function(input, output){
   output$babynames_table <- DT::renderDT({
     babynames %>% 
@@ -415,9 +416,332 @@ server <- function(input, output){
 }
 ```
 
-## Programação Reativa
+# Tipos de Layout e Temas
 
-### O que é reatividade?
+## Layout
+
+Como é na UI que alteramos as saídas do app, as alterações de *layout* também estarão na UI;
+
+Basicamente, todo app vai se dividir em duas partes:
+
+1.  **titlePanel() -** título do aplicativo;
+
+2.  **siderbarLayout() -** esse recebe os comandos para posicionamentos de *inputs* e os espaços para os *outputs.*
+
+## Abordando o sidebarLayout()
+
+```{r,siderbarLayout, echo=TRUE}
+library(shiny)
+
+inputPanel(
+  titlePanel("Baby Name Explorer"),
+  sidebarLayout(
+    sidebarPanel(
+      textInput('name', 'Enter Name', 'David')),
+    mainPanel(  
+      plotOutput('trend')))
+)
+```
+
+```{r layout, echo=FALSE}
+library(shiny)
+
+ui2 <- fluidPage(
+  titlePanel("Baby Name Explorer"),
+  sidebarLayout(
+    sidebarPanel(
+      textInput('name', 'Enter Name', 'David')),
+    mainPanel(  
+      plotOutput('trend')))
+)
+
+server2 <-  function(input, output, session){
+  output$trend <- renderPlot({
+    data_names <- subset(
+      babynames, name == input$name
+    )
+    ggplot(data_names) +
+      geom_line(
+        aes(x = year, y = prop, colour = sex)
+      )
+    })
+}
+
+shinyApp(ui = ui2, server = server2)
+```
+
+## Dashboard
+
+-   Uma das formas de se criar dashboards utilizando as funcionalidades do Shiny é utilizando o pacote [***shinydashboard***](https://rstudio.github.io/shinydashboard/)
+
+```{r echo = TRUE, eval = FALSE}
+
+library(shinydashboard)
+
+header <- dashboardHeader(title = "My first dashboard")
+
+sidebar <- dashboardSidebar()
+
+body <- dashboardBody()
+
+ui <- dashboardPage(header, sidebar, body)
+
+server <- function(input, output){
+
+shinyApp(ui, server)
+
+```
+
+## Dashboard
+
+-   Mudando parâmetros no header
+
+```{r echo = TRUE, eval = FALSE}
+
+# Definindo novos parâmetros no header
+header <- dashboardHeader(title = "My first dashboard",
+                          titleWidth = 300,
+                          dropdownMenu(type = "messages"),
+                          dropdownMenu(type = "notifications")
+                          
+)
+
+ui <- dashboardPage(header, sidebar, body)
+
+server <- function(input, output) {
+}
+
+shinyApp(ui, server)
+
+```
+
+## Dashboard
+
+-   Mudando parâmetros na sidebar
+
+```{r echo = TRUE, eval = FALSE}
+
+# Definindo a sidebar e seus parâmetros
+sidebar <- dashboardSidebar(width = 300,
+                            sidebarMenu(
+                              id = "pages",
+                              menuItem("Many charts", tabName = "charts",
+                                       icon = icon("chart-line")),
+                              menuItem("Statistics", tabName = "stats",
+                                       icon = icon("file-excel"))
+                            ))
+
+ui <- dashboardPage(header, sidebar, body)
+
+server <- function(input, output) {
+}
+
+shinyApp(ui, server)
+
+```
+
+## Dashboard
+
+-   É possível adicionar subtabs na sidebar
+
+```{r echo = TRUE, eval = FALSE}
+
+# Adicionando subtabs na sidebar
+sidebar <- dashboardSidebar(
+  width = 300,
+  sidebarMenu(
+    id = "pages",
+    menuItem("Many charts", tabName = "charts",
+             icon = icon("chart-line")),
+    menuItem("Statistics", tabName = "stats",
+             icon = icon("file-excel"),
+             menuSubItem("Team 1", tabName = "team1",
+                         icon = icon("user")))
+    ))
+
+ui <- dashboardPage(header, sidebar, body)
+
+server <- function(input, output) {
+}
+shinyApp(ui, server)
+
+```
+
+## Dashboard
+
+-   Assim como adicionar inputs
+
+```{r echo = TRUE, eval = FALSE}
+
+# Adicionando inputs na sidebar
+
+sidebar <- dashboardSidebar(width = 300,
+                            sidebarMenu(
+   id = "pages",
+   menuItem("Many charts", tabName = "charts",
+            icon = icon("chart-line")),
+   menuItem("A couple of checkboxes",
+            checkboxGroupInput("checkboxes",
+                               "Days of the week",
+            choices = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")))
+                            ))
+
+ui <- dashboardPage(header, sidebar, body)
+
+server <- function(input, output) {
+}
+
+shinyApp(ui, server)
+
+```
+
+## Dashboard
+
+-   Uma das formas de se criar dashboards utilizando as funcionalidades do Shiny é utilizando o pacote [***shinydashboard***](https://rstudio.github.io/shinydashboard/)
+
+```{r echo = TRUE, eval = FALSE}
+
+library(shinydashboard)
+
+header <- dashboardHeader(title = "My first dashboard")
+
+sidebar <- dashboardSidebar()
+
+body <- dashboardBody()
+
+ui <- dashboardPage(header, sidebar, body)
+
+server <- function(input, output){
+
+shinyApp(ui, server)
+
+```
+
+## Dashboard
+
+-   Mudando parâmetros no header
+
+```{r echo = TRUE, eval = FALSE}
+
+# Definindo novos parâmetros no header
+header <- dashboardHeader(title = "My first dashboard",
+                          titleWidth = 300,
+                          dropdownMenu(type = "messages"),
+                          dropdownMenu(type = "notifications")
+                          
+)
+
+ui <- dashboardPage(header, sidebar, body)
+
+server <- function(input, output) {
+}
+
+shinyApp(ui, server)
+
+```
+
+## Dashboard
+
+-   Mudando parâmetros na sidebar
+
+```{r echo = TRUE, eval = FALSE}
+
+# Definindo a sidebar e seus parâmetros
+sidebar <- dashboardSidebar(width = 300,
+                            sidebarMenu(
+                              id = "pages",
+                              menuItem("Many charts", tabName = "charts",
+                                       icon = icon("chart-line")),
+                              menuItem("Statistics", tabName = "stats",
+                                       icon = icon("file-excel"))
+                            ))
+
+ui <- dashboardPage(header, sidebar, body)
+
+server <- function(input, output) {
+}
+
+shinyApp(ui, server)
+
+```
+
+## Dashboard
+
+-   É possível adicionar subtabs na sidebar
+
+```{r echo = TRUE, eval = FALSE}
+
+# Adicionando subtabs na sidebar
+sidebar <- dashboardSidebar(
+  width = 300,
+  sidebarMenu(
+    id = "pages",
+    menuItem("Many charts", tabName = "charts",
+             icon = icon("chart-line")),
+    menuItem("Statistics", tabName = "stats",
+             icon = icon("file-excel"),
+             menuSubItem("Team 1", tabName = "team1",
+                         icon = icon("user")))
+    ))
+
+ui <- dashboardPage(header, sidebar, body)
+
+server <- function(input, output) {
+}
+shinyApp(ui, server)
+
+```
+
+## Dashboard
+
+-   Assim como adicionar inputs
+
+```{r echo = TRUE, eval = FALSE}
+
+# Adicionando inputs na sidebar
+
+sidebar <- dashboardSidebar(width = 300,
+                            sidebarMenu(
+   id = "pages",
+   menuItem("Many charts", tabName = "charts",
+            icon = icon("chart-line")),
+   menuItem("A couple of checkboxes",
+            checkboxGroupInput("checkboxes",
+                               "Days of the week",
+            choices = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")))
+                            ))
+
+ui <- dashboardPage(header, sidebar, body)
+
+server <- function(input, output) {
+}
+
+shinyApp(ui, server)
+
+```
+
+## Dashboard
+
+-   Por fim é possível desativar a sidebar
+
+```{r echo = TRUE, eval = FALSE}
+
+# Desativando a sidebar
+
+sidebar <- dashboardSidebar(disable = TRUE)
+
+ui <- dashboardPage(header, sidebar, body)
+
+server <- function(input, output) {
+}
+
+shinyApp(ui, server)
+
+```
+
+# Programação Reativa
+
+## O que é reatividade?
 
 Resumidamente, reatividade em programação é o conceito que torna possível a interação dinâmcica do usuário com o programa, no qual o que é efetivamente executado e exibido se baseia no acompanhamento das mudanças de determinados valores. Por exemplo, se um determinado input muda, um novo cálculo deve ser executado e um novo output gerado.
 
@@ -427,12 +751,12 @@ Resumidamente, reatividade em programação é o conceito que torna possível a 
 
 A reatividade se baseia em uma paradigma diferente de programção, chamado de declarativo. No Shiny, declaramos dentro da função `server()` quando e quais códigos devem ser executados a depender de cada nova situação. Podemos representar as relações de dependência entre input e output e os consequentes fluxos de execução nesses casos através de um diagrama de reatividade.
 
-
 ## Programação Reativa
 
 ### Diagrama de Reatividade
 
 exemplo:
+
 ```{r echo=TRUE, eval=FALSE}
 # ui
 ui <- fluidPage(
@@ -461,7 +785,6 @@ ui <- fluidPage(
 
 ### Diagrama de Reatividade
 
-exemplo:
 ```{r, echo=T, eval=F}
 # server
 server <- function(input, output, session) {
@@ -488,7 +811,6 @@ shinyApp(ui, server)
 ### Diagrama de Reatividade
 
 ![diagrama de reatividade do exemplo](./figuras/diagrama_reatividade.jpg){fig-align="left" width="56%"}
-
 
 ::: footer
 **fonte: https://programando-em-shiny.curso-r.com**
