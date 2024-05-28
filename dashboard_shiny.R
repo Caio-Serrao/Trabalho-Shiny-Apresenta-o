@@ -189,3 +189,25 @@ server <- function(input, output){
 
 shinyApp(ui, server)
 
+##### parte 10 ######
+
+# Adicionando tipo especificos de caixas: valueBox
+
+body <- dashboardBody(
+  fluidRow(
+    valueBox(value = 3,
+             subtitle = "Total of cars",
+             icon = icon("car"),
+             color = "red")
+))
+
+ui <- dashboardPage(header, sidebar, body)
+
+server <- function(input, output){
+  
+}
+
+shinyApp(ui, server)
+
+
+
