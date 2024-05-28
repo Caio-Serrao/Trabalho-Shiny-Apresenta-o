@@ -163,3 +163,29 @@ server <- function(input, output){
 
 shinyApp(ui, server)
 
+##### parte 09 ######
+
+# Alterando a largura das caixas
+
+body <- dashboardBody(
+  fluidRow(
+    box("row 1, box 1",
+        plotOutput("plot")),
+    box("row 1, box 2", width = 4)
+  ),
+  fluidRow(
+    box("row 2, box 1",
+        selectInput("select", "select a number:",
+                    choices = c(1, 2, 3, 4, 5)),
+        width = 12)
+  )
+)
+
+ui <- dashboardPage(header, sidebar, body)
+
+server <- function(input, output){
+  
+}
+
+shinyApp(ui, server)
+
