@@ -671,7 +671,8 @@ ui <- fluidPage(
  ui <- fluidPage(
    titlePanel("UFO Sightings"),
    sidebarPanel(
-     selectInput("state", "Choose a U.S. state:", choices = unique(usa_ufo_sightings$state)),
+     selectInput("state", "Choose a U.S. state:", 
+                 choices = unique(usa_ufo_sightings$state)),
      dateRangeInput("dates", "Choose a date range:",
                     start = "1920-01-01",
                     end = "1950-01-01"
