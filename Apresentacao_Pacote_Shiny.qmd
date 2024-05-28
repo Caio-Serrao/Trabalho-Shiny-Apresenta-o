@@ -69,7 +69,7 @@ Em essência, um App Shiny é gerado a partir de dois objetos e a chamada de uma
 
 -   Função shinyApp(ui, server)
 
-```{r echo=TRUE, eval = FALSE}
+```{r echo=TRUE, eval = TRUE}
 
 library(shiny)
 
@@ -81,7 +81,7 @@ server <- function(input, output) {
   
 }
 
-shinyApp(ui = ui, server = ui)
+shinyApp(ui = ui, server = server)
 
 ```
 
@@ -96,7 +96,7 @@ São definidos os tipos de inputs (valores de entrada) e outputs (valores de sa�
 ```{r echo=TRUE, eval=FALSE}
 
 ui <- fluidPage(
-  titlePanel("Aplicativo Teste"),
+  titlePanel(),
   sidebarLayout(
     sidebarPanel(
     ),
@@ -104,7 +104,6 @@ ui <- fluidPage(
     )
   )
 )
-
 ```
 
 ## Tipos de Input
@@ -235,51 +234,34 @@ passwordInput(input,
 Além das funções input citadas acima, há várias outras tais como:
 
 ```{r echo=TRUE, eval=FALSE}
-dateInput(inputId,
-          label,
-          value = NULL,
-          min = NULL,
-          max = NULL,
-          format = "yyyy-mm-dd",
-          ...)
+dateInput(inputId = 'data1', label = 'Escolha uma data de interesse', value = NULL,
+          min = NULL, max = NULL,
+          format = "yyyy-mm-dd", ...)
 
 
 ```
 
 ```{r echo=TRUE, eval=FALSE}
 
-dateRangeInput(inputId,
-               label,
-               start = NULL,
-               end = NULL,
-               min = NULL,
-               max = NULL,
-               format = "yyyy-mm-dd",
-               ...)
-
+dateRangeInput(inputId = 'int_data', label = 'Defina um intervalo de datas',
+               start = NULL, end = NULL, min = NULL,
+               max = NULL, format = "yyyy-mm-dd", ...)
 ```
 
 ```{r echo=TRUE, eval=FALSE}
 
-numericInput(inputId,
-             label,
-             value,
-             min,
-             max,
-             step,
+numericInput(inputId = 'numero', label = 'Selecione um valor',
+             value, min,
+             max, step,
              width = NULL)
-
 ```
 
 ```{r echo=TRUE, eval=FALSE}
 
-fileInput(inputId,
-          label,
-          multiple = FALSE,
-          accept = NULL,
+fileInput(inputId,label,
+          multiple = FALSE, accept = NULL,
           width = NULL,
           ...)
-
 ```
 
 ## Outputs
@@ -360,7 +342,8 @@ server <- function(input, output, session) {
 
 - Para que a interação entre input e output efetivamente ocorra, deve-se utilizar o que chamamos de
 "render functions", que possuem variados tipos, e são escolhidas com base nos tipos 
-de output que foram definidos no UI (tabela, gráfico, dataframe...).  
+de output que foram definidos no UI (tabela, gráfico, dataframe...). Ou seja,
+as render functions são o objeto intermediário entre inputs e outputs.
 
 As *render function*s (funções de renderização) são os objetos que irão efetivamente explicitar os outputs previamente definidos no UI;
 
@@ -392,9 +375,8 @@ plotOutput  | renderPlot({})
 tableOutput | renderTable({})
 imageOutput | renderImage({})
 
-Elas possibilitam também a utilização de pacotes fora do pacote Shiny, mas que possuem suporte para renderizar seus resultados, como:
-
--   *DT*, *PLotly* e *Leaflet*
+Elas possibilitam também a utilização de outros pacotes interativos possuem suporte para renderizar
+seus outputs no Shiny. Entre eles *DT*, *Plotly* e *Leaflet*
 
 
 ### Exemplos de Render Functions
@@ -431,7 +413,7 @@ server <- function(input, output, session){
 
 ## Exemplos de Render Functions
 
-## renderTable() + pacote *DT*
+### renderTable() + pacote *DT*
 
 ```{r echo=TRUE, results='hide'}
 server <- function(input, output){
