@@ -234,48 +234,48 @@ shinyApp(ui, server)
 
 # Adicionando valueBoxOutput
 
-body <- dashboardBody(
-  fluidRow(
-    valueBoxOutput(outputId = "valueBox1")
-  ))
-
-ui <- dashboardPage(header, sidebar, body)
-
-server <- function(input, output){
-  output$valuebox1 <- renderValueBox(
-    valueBox(value = 3,
-             subtitle = "Total of cars",
-             icon = icon("car"),
-             color = "red")
-    )
-  
-}
-
-shinyApp(ui, server)
+#body <- dashboardBody(
+#  fluidRow(
+#    valueBoxOutput(outputId = "valueBox1")
+#  ))
+#
+#ui <- dashboardPage(header, sidebar, body)
+#
+#server <- function(input, output){
+#  output$valuebox1 <- renderValueBox(
+#    valueBox(value = 3,
+#             subtitle = "Total of cars",
+#             icon = icon("car"),
+#             color = "red")
+#    )
+#  
+#}
+#
+#shinyApp(ui, server)
 
 ##### parte 13 ######
 
 # Adicionando infoBoxOutput
 
-body <- dashboardBody(
-  fluidRow(
-    infoBoxOutput(outputId = "infobox1")
-  ))
-
-ui <- dashboardPage(header, sidebar, body)
-
-server <- function(input, output){
-    output$infobox1 <- renderInfoBox(
-      infoBox(value = 3,
-              title = "Total of bicycles",
-              icon = icon("bicycle"),
-              color = "green",
-              width = 12)
-    )
-  
-}
-
-shinyApp(ui, server)
+#body <- dashboardBody(
+#  fluidRow(
+#    infoBoxOutput(outputId = "infobox1")
+#  ))
+#
+#ui <- dashboardPage(header, sidebar, body)
+#
+#server <- function(input, output){
+#    output$infobox1 <- renderInfoBox(
+#      infoBox(value = 3,
+#              title = "Total of bicycles",
+#              icon = icon("bicycle"),
+#              color = "green",
+#              width = 12)
+#    )
+#  
+#}
+#
+#shinyApp(ui, server)
 
 ##### parte 14 ######
 
