@@ -31,6 +31,7 @@ knitr::opts_chunk$set(
 5.  Tipos de Layout e Temas
 6.  Programação Reativa
 7.  Dashboards no Shiny
+8.  Fechamento
 
 # Introdução
 
@@ -1212,3 +1213,23 @@ shinyApp(ui, server)
 ```
 
 # Montando um exemplo de Dashboard
+
+
+# Fechamento
+
+## Sites/Cursos que Auxiliaram na Elaboração da Apresentação:
+
+- Site Oficial do Pacote Shiny: [Site do Shiny](https://shiny.rstudio.com/gallery/)
+
+- Curso Datacamp Shiny : [Curso Shiny](https://app.datacamp.com/learn/courses/building-web-applications-with-shiny-in-r)
+
+- Curso Datacamp Shiny Dashboard: [Curso Shiny Dashboard](https://app.datacamp.com/learn/courses/building-dashboards-with-shinydashboard)
+
+- [Curso Shiny PT-BR](https://programando-em-shiny.curso-r.com)
+
+- Pacote shinydashboard : [Pacote shinydashboard](https://rstudio.github.io/shinydashboard/index.html)
+
+- [Shiny Cheat Sheet](https://www.rstudio.com/wp-content/uploads/2015/02/shiny-cheatsheet.pdf)
+
+# FIM!
+

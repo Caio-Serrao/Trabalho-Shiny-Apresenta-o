@@ -30,7 +30,7 @@ if (interactive()) {
   shinyApp(ui, server)
 }
 
-## checkBoxInput() widget
+## checkBoxGroupInput() widget
 
 if (interactive()){
   
