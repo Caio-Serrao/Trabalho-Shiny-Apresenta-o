@@ -24,9 +24,10 @@ ui <- fluidPage(
   titlePanel("Aplicativo Teste"),
   sidebarLayout(
     sidebarPanel(
-      textInput("name", "Digite seu nome")
+      textInput("nome", "Digite seu nome")
     ),
     mainPanel(
+      textOutput('nome_usuario')
     )
   )
 )
@@ -180,6 +181,66 @@ server <- function(input, output) {
 }
 
 # Executando o App Shiny
+shinyApp(ui = ui, server = server)
+
+
+#### Text Input() com actionButton()
+
+ui <- fluidPage(
+  # Titulo do aplicativo
+  titlePanel("Popularidade de um nome ao longo dos Anos"),
+  
+  # Layout com um sidebar e main panel
+  sidebarLayout(
+    # Sidebar com o textInput e actionButton
+    sidebarPanel(
+      textInput("nameInput", 
+                "Digite um nome de bebe:", 
+                value = "John"),
+      actionButton("updateButton", "Atualizar Grafico")
+    ),
+    
+    # Main panel para exibir o grafico
+    mainPanel(
+      plotOutput("linePlot")
+    )
+  )
+)
+
+# Definir a logica do servidor
+server <- function(input, output) {
+  # Usar reactiveVal para armazenar o nome de bebe atual
+  nameToPlot <- reactiveVal("John")
+  
+  # Atualizar o nome quando o botao for clicado
+  observeEvent(input$updateButton, {
+    nameToPlot(input$nameInput)
+  })
+  
+  output$linePlot <- renderPlot({
+    # Filtrar os dados com base no nome fornecido
+    filteredData <- babynames[babynames$name == nameToPlot(), ]
+    
+    # Verificar se ha dados filtrados
+    if(nrow(filteredData) > 0) {
+      ggplot(filteredData, aes(x = year, y = n)) +
+        geom_line() +
+        labs(title = paste("Popularidade do nome", nameToPlot(), "ao longo do tempo"),
+             x = "Ano",
+             y = "Numero de nascimentos") +
+        theme_minimal()
+    } else {
+      ggplot() +
+        annotate("text", x = 1950, y = 1000, label = "Nome nao encontrado", size = 6, color = "red") +
+        theme_minimal() +
+        labs(title = "Popularidade do nome ao longo do tempo",
+             x = "Ano",
+             y = "Numero de nascimentos")
+    }
+  })
+}
+
+# Rodar o aplicativo Shiny
 shinyApp(ui = ui, server = server)
 
 ######################## Tipos de Output ###############################

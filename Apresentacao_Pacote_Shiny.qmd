@@ -93,8 +93,10 @@ ui <- fluidPage(
   titlePanel(),
   sidebarLayout(
     sidebarPanel(
+      textInput("nome", "Digite seu nome")
     ),
     mainPanel(
+      textOutput('nome_usuario')
   )))
 ```
 
