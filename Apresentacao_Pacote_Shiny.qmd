@@ -22,6 +22,49 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Sumário
+
+1.  Introdução
+2.  Estrutura Básica e Geral de um App Shiny
+3.  UI - Interface do Usuário
+4.  Server
+5.  Tipos de Layout e Temas
+6.  Programação Reativa
+7.  Dashboards no Shiny
+
+# Introdução
+
+## Funcionalidade
+
+-   Shiny é um pacote do R (também disponível para o Python) que permite a criação e publicação de aplicações web sem necessidade de conhecimento prévio em HTML, CSS e JavaScript;
+
+-   Ou seja, a proposta é facilitar a criação de apps web somente com conhecimento em R.
+
+```{r echo = FALSE}
+
+# Inserir Logo Shiny depois#
+
+```
+
+## Estrutura Básica de um App Shiny
+
+-   Em essência, um App Shiny é gerado a partir de dois objetos e a chamada de uma função:
+
+    -   UI (Interface do Usuário)
+
+    -   Server
+
+    -   Função shinyApp(ui, server)
+
+```{r echo=TRUE, eval=FALSE}
+ui <- fluidPage(
+)
+server <- function(input, output) {
+}
+shinyApp(ui = ui, server = server)
+
+```
+
 ## Importando pacotes que serão utilizados para elaboração dos códigos
 
 ```{r echo = TRUE, warning = FALSE, cache = TRUE}
@@ -35,64 +78,13 @@ pacman::p_load("shiny",
                "shinydashboard")
 ```
 
-# Sumário
-
-1.  Introdução
-2.  Estrutura Básica e Geral de um App Shiny
-3.  Tipos de Inputs e Outputs
-4.  Tipos de Layout e Temas
-5.  Programação Reativa
-6.  Dashboards no Shiny
-
-Programação Reativa
-
-# Introdução
-
-## Funcionalidade
-
-Shiny é um pacote do R (também disponível para o Python) que permite a criação e publicação de aplicações web sem necessidade de conhecimento prévio em HTML, CSS e JavaScript;
-
-Ou seja, a proposta é facilitar a criação de apps web somente com conhecimento em R.
-
-```{r echo = FALSE}
-
-# Inserir Logo Shiny depois#
-
-```
-
-## Estrutura Básica de um App Shiny
-
-Em essência, um App Shiny é gerado a partir de dois objetos e a chamada de uma função:
-
--   UI (Interface do Usuário)
-
--   Server
-
--   Função shinyApp(ui, server)
-
-```{r echo=TRUE, eval = TRUE}
-
-library(shiny)
-
-ui <- fluidPage(
-  
-)
-
-server <- function(input, output) {
-  
-}
-
-shinyApp(ui = ui, server = server)
-
-```
-
 # UI - Interface do Usuário
 
 ## UI: Definição
 
-O objeto UI é geralmente inicializado pela função fluidPage(), que gerá uma página HTML vazia (também podem ser usadas outras funções para inicializar o UI);
+-   O objeto UI é geralmente inicializado pela função fluidPage(), que gerá uma página HTML vazia (também podem ser usadas outras funções para inicializar o UI);
 
-São definidos os tipos de inputs (valores de entrada) e outputs (valores de saída) que o App Shiny apresentará, assim como também a formatação, layout.
+-   São definidos os tipos de inputs (valores de entrada) e outputs (valores de saída) que o App Shiny apresentará, assim como também a formatação, layout.
 
 ```{r echo=TRUE, eval=FALSE}
 
@@ -102,20 +94,16 @@ ui <- fluidPage(
     sidebarPanel(
     ),
     mainPanel(
-    )
-  )
-)
+  )))
 ```
 
-## Tipos de Input
+## Tipos de Input - Estrutura Comum
 
-### Estrutura Comum
+-   Há inúmeros tipos de input disponíveis no Shiny. De todo modo, para que sejam reconhecidos e processados, todos ele precisam de dois parâmetros em comum:
 
-Há inúmeros tipos de input disponíveis no Shiny.De todo modo, para que sejam reconhecidos e processados, todos ele precisam de dois parâmetros em comum:
+    -   Parâmetro "**inputId**": Trata-se de uma string simples e única que será armazenada dentro da lista "input" que é parâmetro da função **server(input, output)**. Desse modo, deve-se utilizar id´s diferentes para referenciar diferentes inputs;
 
--   Parâmetro "**inputId**": Trata-se de uma string simples e única que será armazenada dentro da lista "input" que é parâmetro da função **server(input, output)**. Desse modo, deve-se utilizar id´s diferentes para referenciar diferentes inputs;
-
--   Parâmetro "**label**": Trata-se do rótulo/mensagem/instrução que irá aparecer no App Shiny, orientando o usuário sobre como ele deve interagir com as opções de input dadas.
+    -   Parâmetro "**label**": Trata-se do rótulo/mensagem/instrução que irá aparecer no App Shiny, orientando o usuário sobre como ele deve interagir com as opções de input dadas.
 
 ```{r echo = TRUE, eval = FALSE}
 
@@ -134,9 +122,9 @@ sliderInput(inputId = "input2", # String identificadora do Input
 
 ## Tipos de Input
 
-### selectInput()
+### `selectInput()`
 
-Dada uma listagem de opções fornecidas, é solicitado ao usuário selecionar uma ou algumas das opções dadas.
+-   Dada uma listagem de opções fornecidas, é solicitado ao usuário selecionar uma ou algumas das opções dadas.
 
 ```{r echo=TRUE, eval=FALSE}
 
@@ -150,9 +138,9 @@ selectInput(inputId = 'input1',
 
 ## Tipos de Input
 
-### checkboxGroupInput()
+### `checkboxGroupInput()`
 
-Semelhante à função selectInput(), mas com uma aparência levemente diferente, e permite selecionar, por padrão, múltiplas opções.
+-   Semelhante à função selectInput(), mas com uma aparência levemente diferente, e permite selecionar, por padrão, múltiplas opções.
 
 ```{r echo=TRUE, eval=FALSE}
 
@@ -166,9 +154,9 @@ checkboxGroupInput(inputId,
 
 ## Tipos de Input
 
-### actionButton()
+### `actionButton()`
 
-Pede ao usuário que aperte um botão interativo para que uma certa ação seja realizada no aplicativo.
+-   Pede ao usuário que aperte um botão interativo para que uma certa ação seja realizada no aplicativo.
 
 ```{r echo = TRUE, eval = FALSE}
 
@@ -182,9 +170,9 @@ actionButton(inputId = 'input1',
 
 ## Tipos de Input
 
-### sliderInput()
+### `sliderInput()`
 
-A partir de uma barra de rolagem (horizontal), o usuário é informado para selecionar um número dentro de um intervalo de valores estabelecido; ou então definir um intervalo de valores de interesse.
+-   A partir de uma barra de rolagem (horizontal), o usuário é informado para selecionar um número dentro de um intervalo de valores estabelecido; ou então definir um intervalo de valores de interesse.
 
 ```{r echo=TRUE, eval=FALSE}
 
@@ -200,9 +188,9 @@ sliderInput(inputId,
 
 ## Tipos de Input
 
-### textInput()
+### `textInput()`
 
-Trata-se de uma função para inserção de inputs em forma de texto.
+-   Trata-se de uma função para inserção de inputs em forma de texto.
 
 ```{r echo=TRUE, eval=FALSE}
 
@@ -216,9 +204,9 @@ textInput(inputId,
 
 ## Tipos de Input
 
-### passwordInput()
+### `passwordInput()`
 
-Semelhante a função tenxtInput(), com a diferença que o input informado aparecerá com tarjas ("\*")
+-   Semelhante a função tenxtInput(), com a diferença que o input informado aparecerá com tarjas ("\*")
 
 ```{r echo=TRUE, eval=FALSE}
 
@@ -232,7 +220,7 @@ passwordInput(input,
 
 ## Tipos de Input
 
-Além das funções input citadas acima, há várias outras tais como:
+-   Além das funções input citadas acima, há várias outras tais como:
 
 ```{r echo=TRUE, eval=FALSE}
 dateInput(inputId = 'data1', label = 'Escolha uma data de interesse', value = NULL,
@@ -303,13 +291,11 @@ ui3 <- fluidPage(
   textInput("name", "Enter a name:"),
   textOutput("greeting")
 )
-
 server3 <- function(input, output, session){
   output$greeting <- renderText({
     paste("Do you prefer dogs or cats,", input$name, "?")
   })
 }
-  
 shinyApp(ui = ui3, server = server3)
 ```
 
@@ -317,64 +303,50 @@ shinyApp(ui = ui3, server = server3)
 
 ## Server
 
--   É nesse objeto que ocorre efetivamente a interação entre os inputs e outputs definidos no UI. Acessamos cada um dos inputs e outputs definidos usando o operador "\$" em conjuto com os parâmetros input e/ou ouput do objeto server, ou seja:
+-   É nesse objeto que ocorre efetivamente a interação entre os inputs e outputs definidos no UI. Como se trata de uma lista, usamos o operador "\$" em conjuto com os parâmetros input e/ou ouput:
     -   input\$input_id e output\$output_id;
-
-### Estrutura Básica do Server
 
 ```{r echo=T, eval=F}
 server <- function(input, output, session) {
-  
   output$output_id
-  
-  input$input_id
-  
-
-}
+  input$input_id}
 ```
 
 -   "*Mas como exatamente cada elemento do parâmetro output pode interagir com um input*?"
 
-## Server
+## Render Functions
 
-### Render Functions
+-   Para que a interação entre input e output efetivamente ocorra, deve-se utilizar as "render functions", que possuem variados tipos, e são escolhidas com base nos tipos de output que foram definidos no UI (tabela, gráfico, dataframe...).
 
--   Para que a interação entre input e output efetivamente ocorra, deve-se utilizar o que chamamos de "render functions", que possuem variados tipos, e são escolhidas com base nos tipos de output que foram definidos no UI (tabela, gráfico, dataframe...). Ou seja, as render functions são o objeto intermediário entre inputs e outputs.
-
-As *render function*s (funções de renderização) são os objetos que irão efetivamente explicitar os outputs previamente definidos no UI;
+-   As *render function*s (funções de renderização) são os objetos que irão efetivamente explicitar os outputs previamente definidos no UI;
 
 ```{r echo=TRUE, eval=FALSE}
 
 server <- function(input, object) {
   output$output_id <- render**function**({
-    
     "blackbox"(input$input_id) ## Dentro da render function, algum input armazenado dentro do parâmetro
                               # input como "input_id" recebe algum tipo de transformação de maneira a gerar
                               # um output
     })
-
 }
-
 ```
 
-## Server
+## Render Functions
 
-### Render Functions
+-   Alguns exemplos:
 
-Alguns exemplos:
-
-| Output      | Render Function |
-|-------------|-----------------|
+|   Output    | Render Function |
+|:-----------:|:---------------:|
 | textOutput  | renderText({})  |
 | plotOutput  | renderPlot({})  |
 | tableOutput | renderTable({}) |
 | imageOutput | renderImage({}) |
 
-Elas possibilitam também a utilização de outros pacotes interativos possuem suporte para renderizar seus outputs no Shiny. Entre eles *DT*, *Plotly* e *Leaflet*
+-   Elas possibilitam também a utilização de outros pacotes interativos possuem suporte para renderizar seus outputs no Shiny. Entre eles *DT*, *Plotly* e *Leaflet*
 
-### Exemplos de Render Functions
+## Exemplos de Render Functions
 
-#### renderPlot()
+### `renderPlot()`
 
 ```{r, echo=TRUE, eval=F}
 
@@ -390,7 +362,7 @@ server <- function(input, output, session){
 
 ## Exemplos de Render Functions
 
-### renderPlot() + pacote *plotly*
+### `renderPlot()` + pacote *plotly*
 
 ```{r echo=TRUE, eval=F}
 server <- function(input, output, session){
@@ -406,7 +378,7 @@ server <- function(input, output, session){
 
 ## Exemplos de Render Functions
 
-### renderTable() + pacote *DT*
+### `renderTable()` + pacote *DT*
 
 ```{r echo=TRUE, results='hide'}
 server <- function(input, output){
@@ -422,15 +394,15 @@ server <- function(input, output){
 
 ## Layout
 
-Na estrutura básica os *inputs* são dispostos um embaixo do outro, visando melhorar a visualização do usuário, existem funções que alteram esse padrão:
+-   Na estrutura básica os *inputs* são dispostos um embaixo do outro, visando melhorar a visualização do usuário, existem funções que alteram esse padrão:
 
--   titlePanel(): que implementa um título pro app:
+    -   `titlePanel()`: que implementa um título pro app:
 
--   sidebarLayout(): essa cria o layout geral de saída e que comporta opcções de disposição de *inputs* e *outputs.*
+    -   `sidebarLayout()`: essa cria o layout geral de saída e que comporta opcções de disposição de *inputs* e *outputs.*
 
 ## titlePanel()
 
-Aqui a função tem como parametros apenas o *label* que está em formato de *string*
+-   Aqui a função tem como parametros apenas o *label* que está em formato de *string*
 
 ```{r}
 ui <- fluidPage(
@@ -440,13 +412,13 @@ ui <- fluidPage(
 
 ## sidebarLayout()
 
-No layout gerado por essa função divide-se a tela de saída em duas:
+-   No layout gerado por essa função divide-se a tela de saída em duas:
 
--   sidebarPanel(): aqui estarão as entradas do usário;
+    -   `sidebarPanel()`: aqui estarão as entradas do usário;
 
--   mainPanel(): nesta área são as saídas geradas no server.
+    -   `mainPanel()`: nesta área são as saídas geradas no server.
 
-```{r, sidebarLayout, }
+```{r, sidebarLayout, eval=FALSE}
 inputPanel(
   titlePanel("Baby Name Explorer"),
   sidebarLayout(
@@ -460,11 +432,11 @@ inputPanel(
 
 ## sidebarPanel()
 
-Neste espaço as opções de *inputs* vistas anteriormente são posicionadas no lado esquerdo da interface;
+-   Neste espaço as opções de *inputs* vistas anteriormente são posicionadas no lado esquerdo da interface;
 
-São possíveis envolopar mais de uma opção de *input.*
+-   São possíveis envolopar mais de uma opção de *input.*
 
-```{r, siderbarPanel, echo=TRUE}
+```{r, siderbarPanel, echo=TRUE, eval=FALSE}
  inputPanel(
    titlePanel('BMI Calculator'),
    sidebarLayout(
@@ -483,11 +455,11 @@ São possíveis envolopar mais de uma opção de *input.*
 
 ## mainPanel()
 
-Nessa função vamos incluir as saídas que foram processadas no *server* e adicionadas no lado direito da interface;
+-   Nessa função vamos incluir as saídas que foram processadas no *server* e adicionadas no lado direito da interface;
 
-Aqui caso haja **uma** saída basta apenas utilizar:
+-   Aqui caso haja **uma** saída basta apenas utilizar:
 
-```{r}
+```{r, eval=FALSE}
  ui <- fluidPage(
    titlePanel('BMI Calculator'),
    sidebarLayout(
@@ -498,15 +470,12 @@ Aqui caso haja **uma** saída basta apenas utilizar:
        actionButton("show_bmi", "Show BMI")
      ),
      mainPanel(
-       textOutput("bmi")
-     )
-   )
- )
+       textOutput("bmi"))))
 ```
 
 ## tabsetPanel()
 
-Caso existam **mais de uma** saída e deseja-se criar abas para exibir os resultados vamos usar essa função.
+-   Caso existam **mais de uma** saída e deseja-se criar abas para exibir os resultados vamos usar essa função.
 
 ```{r tabsetPanel, eval=FALSE}
  ui <- fluidPage(
@@ -522,28 +491,50 @@ Caso existam **mais de uma** saída e deseja-se criar abas para exibir os result
      tabsetPanel(
        tabPanel("Plot", plotOutput("shapes")),
        tabPanel("Table", tableOutput("duration_table"))
-     )
-   )
- )
+     )))
+```
+
+## Temas
+
+-   O pacote possui uma viariedade de temas já disponiveis através do comando:
+
+```{r, eval=FALSE}
+shinythemes::themeSelector()
+```
+
+-   Uma vez escolhido o tema basta adicionar na UI.
+
+```{r, eval=FALSE}
+ui <- fluidPage(
+  titlePanel("Histogram"),
+  theme = shinythemes::shinytheme('united'),
+  sidebarLayout(
+    sidebarPanel(sliderInput('nb_bins', '# Bins', 5, 10 , 5)),
+    mainPanel(
+      tabsetPanel(
+        tabPanel('Waiting', 
+                 plotOutput('hist_waiting')),
+        tabPanel('Eruptions', 
+                 plotOutput('hist_eruptions'))))))
 ```
 
 # Programação Reativa
 
 ## O que é reatividade?
 
-Resumidamente, reatividade em programação é o conceito que torna possível a interação dinâmcica do usuário com o programa, no qual o que é efetivamente executado e exibido se baseia no acompanhamento das mudanças de determinados valores. Por exemplo, se um determinado input muda, um novo cálculo deve ser executado e um novo output gerado.
+-   Resumidamente, reatividade em programação é o conceito que torna possível a interação dinâmcica do usuário com o programa, no qual o que é efetivamente executado e exibido se baseia no acompanhamento das mudanças de determinados valores. Por exemplo, se um determinado input muda, um novo cálculo deve ser executado e um novo output gerado.
 
 ## Programação Reativa
 
 ### Como funciona a reatividade em apps Shiny?
 
-A reatividade se baseia em uma paradigma diferente de programção, chamado de declarativo. No Shiny, declaramos dentro da função `server()` quando e quais códigos devem ser executados a depender de cada nova situação. As relações de dependência entre input e output e os consequentes fluxos de execução nesses casos são definidadas e representadas através de um diagrama de reatividade.
+-   A reatividade se baseia em uma paradigma diferente de programção, chamado de declarativo. No Shiny, declaramos dentro da função `server()` quando e quais códigos devem ser executados a depender de cada nova situação. As relações de dependência entre input e output e os consequentes fluxos de execução nesses casos são definidadas e representadas através de um diagrama de reatividade.
 
 ## Programação Reativa
 
 ### Diagrama de Reatividade
 
-exemplo:
+-   Exemplo:
 
 ```{r echo=TRUE, eval=FALSE}
 #| code-line-numbers: false
@@ -572,7 +563,7 @@ fonte: https://programando-em-shiny.curso-r.com
 
 ### Diagrama de Reatividade
 
-exemplo:
+-   Exemplo:
 
 ```{r, echo=T, eval=F}
 #| code-line-numbers: false
@@ -610,7 +601,7 @@ fonte: https://programando-em-shiny.curso-r.com
 
 ### Valores Reativos e Funções Observadoras
 
-Para um app Shiny funcionar corretamente, é necessário que o diagrama de reatividade seja definido adequadamente na função `server()`. E para isso, alguns princípios devem ser observados. O primeiro deles é o seguinte: o diagrama de reatividade deve começar em um **valor reativo** e terminar em uma **função observadora**
+-   Para um app Shiny funcionar corretamente, é necessário que o diagrama de reatividade seja definido adequadamente na função `server()`. E para isso, alguns princípios devem ser observados. O primeiro deles é o seguinte: o diagrama de reatividade deve começar em um **valor reativo** e terminar em uma **função observadora**
 
 ::: footer
 fonte: https://programando-em-shiny.curso-r.com
@@ -620,19 +611,9 @@ fonte: https://programando-em-shiny.curso-r.com
 
 ### Valores Reativos e Funções Observadoras
 
-**valores reativos** são objetos que ativam a reatividade a partir das mudanças em seus valores. O principal exemplo de valor reativo são os próprios objetos do `input`.
+-   **valores reativos** são objetos que ativam a reatividade a partir das mudanças em seus valores. O principal exemplo de valor reativo são os próprios objetos do `input`.
 
-**funções observadoras** são funções que acompanham as mudanças no valores reativos e executam algo diferente a partir delas. O principal exemplo de função reativas são as funções da famílias `render*()`.
-
-::: footer
-fonte: https://programando-em-shiny.curso-r.com
-:::
-
-## Programação Reativa
-
-### Expressões Reativas
-
-**Expressões Reativas** são objetos especiais muito importantes que atuam como valor reativo e função observadora ao mesmo tempo. São utilizadas em situações onde um valor reativo utilizado dentro de uma função observadora depende outro valor reativo.
+-   **funções observadoras** são funções que acompanham as mudanças no valores reativos e executam algo diferente a partir delas. O principal exemplo de função reativas são as funções da famílias `render*()`.
 
 ::: footer
 fonte: https://programando-em-shiny.curso-r.com
@@ -642,9 +623,7 @@ fonte: https://programando-em-shiny.curso-r.com
 
 ### Expressões Reativas
 
-Sua utilidade se torna mais claro quando levamos em consideração um segundo princípio importante da reatividade no shiny: **valores e expressões reativas só podem ser lidas dentro de um contexto reativo.**
-
-Ou seja, em um caso onde precisemos criar uma variável que dependa de um input, mas que sirva para ativar a reatividade em outputs diferentes, precisamos de uma expressão reativa, por exemplo.
+-   **Expressões Reativas** são objetos especiais muito importantes que atuam como valor reativo e função observadora ao mesmo tempo. São utilizadas em situações onde um valor reativo utilizado dentro de uma função observadora depende outro valor reativo.
 
 ::: footer
 fonte: https://programando-em-shiny.curso-r.com
@@ -654,9 +633,9 @@ fonte: https://programando-em-shiny.curso-r.com
 
 ### Expressões Reativas
 
-exemplo:
+-   Sua utilidade se torna mais claro quando levamos em consideração um segundo princípio importante da reatividade no shiny: **valores e expressões reativas só podem ser lidas dentro de um contexto reativo.**
 
-Imagine uma aplicação Shiny que simule o lançar de um dado simples de 6 faces. Queremos que o usário insira o número de lançamentos (tamanho da amostra) desejado e que a partir desse número seja exibido um gráfico de barras com o quantidade de aparições de cada número (distribuição observada) e um frase informando qual valor mais apareceu.
+-   Ou seja, em um caso onde precisemos criar uma variável que dependa de um input, mas que sirva para ativar a reatividade em outputs diferentes, precisamos de uma expressão reativa, por exemplo.
 
 ::: footer
 fonte: https://programando-em-shiny.curso-r.com
@@ -666,9 +645,21 @@ fonte: https://programando-em-shiny.curso-r.com
 
 ### Expressões Reativas
 
-exemplo - primeira abordagem:
+-   exemplo:
 
-```{r}
+-   Imagine uma aplicação Shiny que simule o lançar de um dado simples de 6 faces. Queremos que o usário insira o número de lançamentos (tamanho da amostra) desejado e que a partir desse número seja exibido um gráfico de barras com o quantidade de aparições de cada número (distribuição observada) e um frase informando qual valor mais apareceu.
+
+::: footer
+fonte: https://programando-em-shiny.curso-r.com
+:::
+
+## Programação Reativa
+
+### Expressões Reativas
+
+-   exemplo - primeira abordagem:
+
+```{r, eval=FALSE}
 #| code-line-numbers: false
 ui <- fluidPage(
   "INCRÍVEL DADO",
@@ -692,9 +683,9 @@ fonte: https://programando-em-shiny.curso-r.com
 
 ### Expressões Reativas
 
-exemplo - primeira abordagem:
+-   exemplo - primeira abordagem:
 
-```{r}
+```{r, eval=FALSE}
 #| code-line-numbers: false
 server <- function(input, output, session) {
   lancamentos <- sample(1:6, input$tamanho, replace = TRUE)
@@ -724,11 +715,11 @@ fonte: https://programando-em-shiny.curso-r.com
 
 **Por que deu erro?**
 
-Justamente porque não seguimos o segundo princípio, e tentamos acessar o valor reativo `input$tamanho` dentro da variável comum `lancamentos`.
+-   Justamente porque não seguimos o segundo princípio, e tentamos acessar o valor reativo `input$tamanho` dentro da variável comum `lancamentos`.
 
 **Qual é abordagem correta?**
 
-Podemos resolver criando o objeto `lancamentos` como uma expressão reativa através da função observadora `reactive()`.
+-   Podemos resolver criando o objeto `lancamentos` como uma expressão reativa através da função observadora `reactive()`.
 
 ::: footer
 fonte: https://programando-em-shiny.curso-r.com
@@ -738,16 +729,16 @@ fonte: https://programando-em-shiny.curso-r.com
 
 ### Expressões Reativas
 
-exemplo - abordagem adequada
+-   Exemplo - abordagem adequada
 
-Dentro de `server()`, ao invés de:
+-   Dentro de `server()`, ao invés de:
 
 ```{r eval=FALSE}
 #| code-line-numbers: false
 lancamentos <- sample(1:6, input$tamanho, replace = TRUE)
 ```
 
-Fazemos:
+-   Fazemos:
 
 ```{r eval=FALSE}
 #| code-line-numbers: false
@@ -765,9 +756,9 @@ lancamentos <- reactive({
 
 #### `reactive()`
 
-A função `reactive()` cria uma expressão reativa que observa todos os valores reativos presentes dentro de seu código.
+-   A função `reactive()` cria uma expressão reativa que observa todos os valores reativos presentes dentro de seu código.
 
-No exemplo anterior, criamos a expressão reativa `lancamentos` cujo valor é recalculado sempre que o valor reativo `input$tamanho` mudar, e utilizamos seu valor chamando `lancamentos()` dentro das funções observadoras `renderPlot()` e `renderText()`.
+-   No exemplo anterior, criamos a expressão reativa `lancamentos` cujo valor é recalculado sempre que o valor reativo `input$tamanho` mudar, e utilizamos seu valor chamando `lancamentos()` dentro das funções observadoras `renderPlot()` e `renderText()`.
 
 ::: footer
 fonte: https://programando-em-shiny.curso-r.com
@@ -779,11 +770,11 @@ fonte: https://programando-em-shiny.curso-r.com
 
 #### `eventReactive()`
 
-A função `eventReactive()` é similar, mas observa mudanças em apenas um valor reativo, especificado na chamada da própria função.
+-   A função `eventReactive()` é similar, mas observa mudanças em apenas um valor reativo, especificado na chamada da própria função.
 
-Geralmente é utilzada quando queremos atrasar (delay) a ativação da função observadora.
+-   Geralmente é utilzada quando queremos atrasar (delay) a ativação da função observadora.
 
-Um caso comum de uso é quando temos um botão na UI, criado com a função `actionButton()`, por exemplo.
+-   Um caso comum de uso é quando temos um botão na UI, criado com a função `actionButton()`, por exemplo.
 
 ## Programação Reativa
 
@@ -791,9 +782,9 @@ Um caso comum de uso é quando temos um botão na UI, criado com a função `act
 
 #### `eventReactive()`
 
-Podemos utilizar essa ideia para incrementar o nosso exemplo anterior, de tal forma que os outputs só serão gerados caso o botão seja clicado, independente se os valores de `input$tamanho` mudarem.
+-   Podemos utilizar essa ideia para incrementar o nosso exemplo anterior, de tal forma que os outputs só serão gerados caso o botão seja clicado, independente se os valores de `input$tamanho` mudarem.
 
-Adicionamos a função `actionButton()` da seguinte maneira:
+-   Adicionamos a função `actionButton()` da seguinte maneira:
 
 ```{r eval=FALSE}
 #| code-line-numbers: false
@@ -810,7 +801,7 @@ fonte: https://programando-em-shiny.curso-r.com
 
 #### `eventReactive()`
 
-E atribuímos ao objeto `lancamentos` dentro do `server()` a função `eventReactive()` tendo `input$botao` como primeiro argumento:
+-   E atribuímos ao objeto `lancamentos` dentro do `server()` a função `eventReactive()` tendo `input$botao` como primeiro argumento:
 
 ```{r eval=FALSE}
 #| code-line-numbers: false
@@ -829,11 +820,11 @@ fonte: https://programando-em-shiny.curso-r.com
 
 #### `observe()  E  observeEvent()`
 
-A funções `observe()` e `observetEvent()` tem o conceito semelhante a `reactive()` e `eventReactive()`, porém possuem uma diferença fundamental: elas não geram expressões reativas, sendo utilizadas apenas para rodar determinado código caso uma mudança em algum valor reativo aconteça. Ou seja, não podemos definir a expressão reativa `lancamentos` do exemplo anterior com elas.
+-   A funções `observe()` e `observetEvent()` tem o conceito semelhante a `reactive()` e `eventReactive()`, porém possuem uma diferença fundamental: elas não geram expressões reativas, sendo utilizadas apenas para rodar determinado código caso uma mudança em algum valor reativo aconteça. Ou seja, não podemos definir a expressão reativa `lancamentos` do exemplo anterior com elas.
 
-::: footer
-fonte: https://programando-em-shiny.curso-r.com
-:::
+    ::: footer
+    fonte: https://programando-em-shiny.curso-r.com
+    :::
 
 ## Programação Reativa
 
@@ -841,7 +832,7 @@ fonte: https://programando-em-shiny.curso-r.com
 
 #### `observe()  E  observeEvent()`
 
-Geralmente são utilizadas quando queremos usar a reatividade para disparar (trigger) ações que não estão ligadas à geração de outputs, como o registro de informações em bases de dados ou o envio de e-mails, por exemplo.
+-   Geralmente são utilizadas quando queremos usar a reatividade para disparar (trigger) ações que não estão ligadas à geração de outputs, como o registro de informações em bases de dados ou o envio de e-mails, por exemplo.
 
 ::: footer
 fonte: https://programando-em-shiny.curso-r.com
@@ -853,7 +844,7 @@ fonte: https://programando-em-shiny.curso-r.com
 
 #### `isolate()`
 
-Utilizada para isolar um valor reativo específico entre vários, de tal forma que se **apenas** ele for alterado nenhuma reatividade é disparada.
+-   Utilizada para isolar um valor reativo específico entre vários, de tal forma que se **apenas** ele for alterado nenhuma reatividade é disparada.
 
 ::: footer
 fonte: https://shiny.posit.co/r/getstarted/build-an-app/reactivity-essentials/stop-trigger-delay.html
@@ -865,9 +856,9 @@ fonte: https://shiny.posit.co/r/getstarted/build-an-app/reactivity-essentials/st
 
 #### `reactiveVal()  E  reactiveValues()`
 
-Utilizada para gerar apenas um (`reactiveVal`) ou mais (`reactiveValues`) valores reativos mutáveis, diferentes do objetos do `input`, que são imutáveis.
+-   Utilizada para gerar apenas um (`reactiveVal`) ou mais (`reactiveValues`) valores reativos mutáveis, diferentes do objetos do `input`, que são imutáveis.
 
-Pode ser usada em alguns casos quando queremos controlar valores reativos dentro do server(), e renderizar mudanças na UI a partir deles.
+-   Pode ser usada em alguns casos quando queremos controlar valores reativos dentro do server(), e renderizar mudanças na UI a partir deles.
 
 ::: footer
 fonte: https://programando-em-shiny.curso-r.com
@@ -879,7 +870,7 @@ fonte: https://programando-em-shiny.curso-r.com
 
 #### `req()  E  validate()`
 
-Utilizada para validar valores reativos. Nesse contexto **inválido** indica um objeto:
+-   Utilizada para validar valores reativos. Nesse contexto **inválido** indica um objeto:
 
 ```         
 • FALSE
@@ -902,9 +893,9 @@ fonte: https://programando-em-shiny.curso-r.com
 
 #### `req()  E  validate()`
 
-A função `req()` retorna um erro silencioso. Com o qual podemos definir que o `server()` e a `ui()` devem manter as coisas como estavam antes.
+-   A função `req()` retorna um erro silencioso. Com o qual podemos definir que o `server()` e a `ui()` devem manter as coisas como estavam antes.
 
-Já a função `validate()` permite customizar o erro retornado.
+-   Já a função `validate()` permite customizar o erro retornado.
 
 ::: footer
 fonte: https://programando-em-shiny.curso-r.com
