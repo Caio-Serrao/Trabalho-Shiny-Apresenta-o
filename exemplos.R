@@ -367,6 +367,35 @@ server2 <-  function(input, output, session){
 
 shinyApp(ui = ui2, server = server2)
 
+# sem o tabPanel
+
+ui <- fluidPage(
+  titlePanel("Histogram"),
+  sidebarLayout(
+    sidebarPanel(sliderInput('nb_bins', '# Bins', 5, 10 , 5)),
+    mainPanel(
+      plotOutput('hist_waiting'), 
+      plotOutput('hist_eruptions'))
+      )
+    )
+  
+
+
+server <- function(input, output, session){
+  output$hist_waiting <- renderPlot({
+    hist(faithful$waiting,
+         breaks = input$nb_bins,
+         col = 'steelblue')
+  })
+  output$hist_eruptions <- renderPlot({
+    hist(faithful$eruptions,
+         breaks = input$nb_bins,
+         col = 'steelblue')
+  })
+}
+
+shinyApp(ui = ui, server = server)
+
 #completo
 
 ui <- fluidPage(
